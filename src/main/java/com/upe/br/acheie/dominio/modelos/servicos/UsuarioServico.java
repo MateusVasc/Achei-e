@@ -18,7 +18,7 @@ public class UsuarioServico {
 	@Autowired
 	private UsuarioRepositorio usuarioRepo;
 	
-	private static final Logger log = LogManager.getLogger("usuario-controller");
+	private static final Logger log = LogManager.getLogger("usuario-servico");
 	
 	public Usuario buscarUsuarioPorId(UUID idUsuario) { //fazer try-catch
 		try {
