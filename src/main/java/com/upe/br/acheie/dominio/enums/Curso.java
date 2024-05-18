@@ -15,6 +15,7 @@ public enum Curso {
   LICENCIATURA_EM_GEOGRAFIA("Licenciatura em Geografia"),
   LICENCIATURA_EM_CIENCIAS_BIOLOGICAS("Licenciatura em Ciencias Biologicas"),
   LICENCIATURA_EM_LETRAS("Licenciatura em Letras"),
-  LICENCIATURA_EM_PEDAGOGIA("Licenciatura em Pedagogia");
+  LICENCIATURA_EM_PEDAGOGIA("Licenciatura em Pedagogia"),
+  LICENCIATURA_EM_MATEMATICA("Licenciatura em Matemática");
   private final String valor;
 }
