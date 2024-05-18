@@ -1,5 +1,6 @@
 package com.upe.br.acheie.dominio.modelos.servicos;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +31,12 @@ public class PostServico {
 		}
 	}
 	
-	
+	public List<Post> buscarPosts() {
+		try {
+			return postRepo.findAll();
+		} catch (Exception e) {
+			log.log(Level.ERROR, "Erro ao acessar o feed do usuário");
+			return List.of();
+		}
+	}
 }
