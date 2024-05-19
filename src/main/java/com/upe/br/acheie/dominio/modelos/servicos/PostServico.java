@@ -10,10 +10,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.upe.br.acheie.dominio.enums.Cadastro;
+import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
+import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.dominio.modelos.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.modelos.dto.PostDto;
+import com.upe.br.acheie.dominio.modelos.repositorios.ItemRepositorio;
 import com.upe.br.acheie.dominio.modelos.repositorios.PostRepositorio;
+import com.upe.br.acheie.dominio.modelos.repositorios.UsuarioRepositorio;
 
 @Service
 public class PostServico {
@@ -21,11 +26,37 @@ public class PostServico {
 	@Autowired
 	private PostRepositorio postRepo;
 	
+	@Autowired
+	private UsuarioRepositorio usuarioRepo;
+	
+	@Autowired
+	private ItemServico itemServico;
+	
+	@Autowired
+	private ItemRepositorio itemRepo;
+	
 	private static final Logger log = LogManager.getLogger(PostServico.class);
+	
+	public Cadastro cadastrarPost(UUID usuarioID, PostDto postDto) {
+		try {
+			Usuario usuario =  usuarioRepo.getReferenceById(usuarioID);
+			
+			Post novoPost = new Post(postDto, usuario);
+			postRepo.save(novoPost);
+			
+			UUID itemId = itemServico.cadastrarItem(postDto.item(), novoPost.getId());
+			Item item = itemRepo.getReferenceById(itemId);
+			novoPost.setItem(item);
+			
+			return Cadastro.SUCESSO_CADASTRO;
+		} catch (Exception e) {
+			log.log(Level.ERROR, e.getMessage());
+			return Cadastro.ERRO_CADASTRO;
+		}
+	}
 	
 	public PostDto buscarPostEspecifico(UUID idPost) {
 		try {
-			log.log(Level.ERROR, idPost);
 			Optional<Post> post = postRepo.findById(idPost);
 			if (post.isEmpty()) {
 				log.log(Level.ERROR, "Não há elemento dentro do Optional");

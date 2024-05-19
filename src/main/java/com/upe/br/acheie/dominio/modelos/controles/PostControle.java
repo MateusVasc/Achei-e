@@ -10,8 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.upe.br.acheie.dominio.enums.Cadastro;
+import com.upe.br.acheie.dominio.modelos.dto.ComentarioDto;
+import com.upe.br.acheie.dominio.modelos.dto.PostDto;
+import com.upe.br.acheie.dominio.modelos.servicos.ComentarioServico;
 import com.upe.br.acheie.dominio.modelos.servicos.PostServico;
 
 @RestController
@@ -20,7 +27,21 @@ public class PostControle {
 	@Autowired
 	private PostServico postServico;
 	
+	@Autowired
+	private ComentarioServico comentarioServico;
+	
 	private static final Logger log = LogManager.getLogger(PostControle.class);
+	
+	@PostMapping("/novo-post/{usuarioId}")
+	public ResponseEntity cadastrarPost(@PathVariable UUID usuarioId, 
+			@RequestBody PostDto postDto) {
+		try {
+			Cadastro estadoCadastro = this.postServico.cadastrarPost(usuarioId, postDto);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
 	
 	@GetMapping("/post/{id}")
 	public ResponseEntity buscarPostPorId(@PathVariable UUID id) {
@@ -37,6 +58,16 @@ public class PostControle {
 			return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+	
+	@PostMapping("/post/{postId}")
+	public ResponseEntity comentar(@PathVariable UUID postId, 
+			@RequestParam("usuarioId") UUID usuarioId, @RequestBody ComentarioDto comentario) {
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(comentarioServico.comentar(postId, usuarioId, comentario));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
 }
