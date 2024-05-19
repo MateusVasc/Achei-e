@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.modelos.Post;
+import com.upe.br.acheie.dominio.modelos.dto.ComentarioDto;
+import com.upe.br.acheie.dominio.modelos.dto.PostDto;
 import com.upe.br.acheie.dominio.modelos.repositorios.PostRepositorio;
 
 @Service
@@ -19,21 +21,30 @@ public class PostServico {
 	@Autowired
 	private PostRepositorio postRepo;
 	
-	private static final Logger log = LogManager.getLogger("post-servico");
+	private static final Logger log = LogManager.getLogger(PostServico.class);
 	
-	public Post buscarPostEspecifico(UUID idPost) {
+	public PostDto buscarPostEspecifico(UUID idPost) {
 		try {
+			log.log(Level.ERROR, idPost);
 			Optional<Post> post = postRepo.findById(idPost);
-			return post.orElse(null);
+			if (post.isEmpty()) {
+				log.log(Level.ERROR, "Não há elemento dentro do Optional");
+				throw new RuntimeException();
+			}
+			List<ComentarioDto> comentarios = post.get().getComentarios().stream().
+					map(ComentarioDto::new).toList();
+			PostDto postDto = new PostDto(post.get(), comentarios);
+			return postDto;
 		} catch (Exception e) {
-			log.log(Level.ERROR, "Post não encontrado");
+			log.log(Level.ERROR, e.getMessage());
 			return null;
 		}
 	}
 	
-	public List<Post> buscarPosts() {
+	public List<PostDto> buscarPosts() {
 		try {
-			return postRepo.findAll();
+			List<PostDto> posts = postRepo.findAll().stream().map(post -> new PostDto(post, List.of())).toList();
+			return posts;
 		} catch (Exception e) {
 			log.log(Level.ERROR, "Erro ao acessar o feed do usuário");
 			return List.of();
