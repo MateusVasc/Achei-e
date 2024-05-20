@@ -1,8 +1,7 @@
-package com.upe.br.acheie.dominio.modelos.controles;
+package com.upe.br.acheie.controles;
 
 import java.util.UUID;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.upe.br.acheie.dominio.enums.Cadastro;
-import com.upe.br.acheie.dominio.modelos.dto.ComentarioDto;
-import com.upe.br.acheie.dominio.modelos.dto.PostDto;
-import com.upe.br.acheie.dominio.modelos.servicos.ComentarioServico;
-import com.upe.br.acheie.dominio.modelos.servicos.PostServico;
+import com.upe.br.acheie.dominio.dto.ComentarioDto;
+import com.upe.br.acheie.dominio.dto.ErroDto;
+import com.upe.br.acheie.dominio.dto.PostDto;
+import com.upe.br.acheie.dominio.servicos.ComentarioServico;
+import com.upe.br.acheie.dominio.servicos.PostServico;
+import com.upe.br.acheie.dominio.utils.enums.Cadastro;
 
 @RestController
 public class PostControle {
@@ -36,10 +36,10 @@ public class PostControle {
 	public ResponseEntity cadastrarPost(@PathVariable UUID usuarioId, 
 			@RequestBody PostDto postDto) {
 		try {
-			Cadastro estadoCadastro = this.postServico.cadastrarPost(usuarioId, postDto);
+			this.postServico.cadastrarPost(usuarioId, postDto);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class PostControle {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPostEspecifico(id));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
 		}
 	}
 	
@@ -57,17 +57,23 @@ public class PostControle {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
 		}
 	}
 	
 	@PostMapping("/post/{postId}")
-	public ResponseEntity comentar(@PathVariable UUID postId, 
+	public ResponseEntity cadastrarComentario(@PathVariable UUID postId, 
 			@RequestParam("usuarioId") UUID usuarioId, @RequestBody ComentarioDto comentario) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(comentarioServico.comentar(postId, usuarioId, comentario));
+			this.comentarioServico.cadastrarComentario(postId, usuarioId, comentario);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.tratarErro(e));
 		}
+	}
+	
+	public ErroDto tratarErro(Exception e) {
+		log.error(e.getMessage(), e);
+		return new ErroDto(e);
 	}
 }

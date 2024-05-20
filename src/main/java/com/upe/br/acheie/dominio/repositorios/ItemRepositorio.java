@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.modelos.repositorios;
+package com.upe.br.acheie.dominio.repositorios;
 
 import java.util.UUID;
 

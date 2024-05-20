@@ -1,13 +1,13 @@
-package com.upe.br.acheie.dominio.modelos.dto;
+package com.upe.br.acheie.dominio.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-import com.upe.br.acheie.dominio.enums.Categoria;
-import com.upe.br.acheie.dominio.enums.Estado;
 import com.upe.br.acheie.dominio.modelos.Item;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
 
 public record ItemDto(Estado estado, Categoria categoria, String descricao, 
-		String titulo, Date data, byte[] foto) {
+		String titulo, LocalDate data, byte[] foto) {
 	
 	public ItemDto(Item item) {
 		this(item.getEstado(), item.getCategoria(), item.getDescricao(), 

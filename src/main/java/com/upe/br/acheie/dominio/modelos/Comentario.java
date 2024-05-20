@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
-import com.upe.br.acheie.dominio.modelos.dto.ComentarioDto;
+import com.upe.br.acheie.dominio.dto.ComentarioDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,10 +34,10 @@ public class Comentario {
   private String assunto;
 
   @Column(name = "criacao_do_comentario", nullable = false)
-  private Date criacaoDoComentario;
+  private LocalDate criacaoDoComentario;
 
   @Column(name = "remocao_do_comentario")
-  private Date remocaoDoComentario;
+  private LocalDate remocaoDoComentario;
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)
@@ -50,7 +50,7 @@ public class Comentario {
   public Comentario(ComentarioDto comentario, Post post, Usuario usuario) {
 	  this.assunto = comentario.assunto();
 	  this.criacaoDoComentario = comentario.dataCriacao() != null ? comentario.dataCriacao() : 
-		  Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		  LocalDate.now();
 	  this.remocaoDoComentario = null;
 	  this.usuario = usuario;
 	  this.post = post;

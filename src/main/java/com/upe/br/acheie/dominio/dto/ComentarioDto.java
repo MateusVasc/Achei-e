@@ -1,11 +1,11 @@
-package com.upe.br.acheie.dominio.modelos.dto;
+package com.upe.br.acheie.dominio.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.upe.br.acheie.dominio.modelos.Comentario;
 
-public record ComentarioDto(String assunto, UsuarioDto usuario, Date dataCriacao, 
-		Date dataRemocao) {
+public record ComentarioDto(String assunto, UsuarioDto usuario, LocalDate dataCriacao, 
+		LocalDate dataRemocao) {
 
 	public ComentarioDto(Comentario comentario) {
 		this(comentario.getAssunto(), new UsuarioDto(comentario.getUsuario()), 

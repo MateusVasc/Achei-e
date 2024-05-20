@@ -1,7 +1,13 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.enums.Curso;
-import com.upe.br.acheie.dominio.enums.Periodo;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import com.upe.br.acheie.dominio.utils.enums.Curso;
+import com.upe.br.acheie.dominio.utils.enums.Periodo;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,10 +21,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,10 +63,10 @@ public class Usuario {
   private byte[] foto;
 
   @Column(name = "criacao_da_conta", nullable = false)
-  private Date criacaoDaConta;
+  private LocalDate criacaoDaConta;
 
   @Column(name = "remocao_da_conta")
-  private Date remocaoDaConta;
+  private LocalDate remocaoDaConta;
 
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Post> posts;

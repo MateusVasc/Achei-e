@@ -1,13 +1,11 @@
 package com.upe.br.acheie.dominio.modelos;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.upe.br.acheie.dominio.enums.Tipo;
-import com.upe.br.acheie.dominio.modelos.dto.PostDto;
+import com.upe.br.acheie.dominio.dto.PostDto;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,13 +39,13 @@ public class Post {
   private Tipo tipo;
 
   @Column(name = "criacao_do_post", nullable = false)
-  private Date criacaoDoPost;
+  private LocalDate criacaoDoPost;
 
   @Column(name = "remocao_do_post")
-  private Date remocaoDoPost;
+  private LocalDate remocaoDoPost;
 
   @Column(name = "devolucao_do_item")
-  private Date devolucaoItem;
+  private LocalDate devolucaoItem;
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)
@@ -61,8 +59,7 @@ public class Post {
   
   public Post(PostDto postDto, Usuario usuario) {
 	this.tipo = postDto.tipo();
-	this.criacaoDoPost = postDto.dataCriacao() != null ? postDto.dataCriacao() : 
-		Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+	this.criacaoDoPost = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
 	this.remocaoDoPost = postDto.dataRemocao();
 	this.devolucaoItem = null;
 	this.usuario = usuario;
