@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.dto;
+package com.upe.br.acheie.dominio.dto.response;
 
 import java.util.Date;
 

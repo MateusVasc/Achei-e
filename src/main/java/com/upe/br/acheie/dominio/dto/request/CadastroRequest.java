@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.dto;
+package com.upe.br.acheie.dominio.dto.request;
 
 import com.upe.br.acheie.dominio.enums.Curso;
 import com.upe.br.acheie.dominio.enums.Periodo;
