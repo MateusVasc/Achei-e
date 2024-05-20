@@ -1,7 +1,7 @@
 package com.upe.br.acheie.controlador;
 
-import com.upe.br.acheie.dominio.dto.CadastroRequest;
-import com.upe.br.acheie.dominio.dto.LoginRequest;
+import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
+import com.upe.br.acheie.dominio.dto.request.LoginRequest;
 import com.upe.br.acheie.servico.AutenticacaoServico;
 import com.upe.br.acheie.utils.MensagemUtil;
 import lombok.RequiredArgsConstructor;

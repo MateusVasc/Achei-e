@@ -1,10 +1,10 @@
 package com.upe.br.acheie.servico;
 
 import com.upe.br.acheie.config.TokenServico;
-import com.upe.br.acheie.dominio.dto.CadastroRequest;
-import com.upe.br.acheie.dominio.dto.CadastroResponse;
-import com.upe.br.acheie.dominio.dto.LoginRequest;
-import com.upe.br.acheie.dominio.dto.LoginResponse;
+import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
+import com.upe.br.acheie.dominio.dto.response.CadastroResponse;
+import com.upe.br.acheie.dominio.dto.request.LoginRequest;
+import com.upe.br.acheie.dominio.dto.response.LoginResponse;
 import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.utils.AcheieException;

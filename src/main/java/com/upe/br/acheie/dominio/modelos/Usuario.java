@@ -1,6 +1,6 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.dto.CadastroRequest;
+import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
 import com.upe.br.acheie.dominio.enums.Curso;
 import com.upe.br.acheie.dominio.enums.Periodo;
 import jakarta.persistence.CascadeType;
