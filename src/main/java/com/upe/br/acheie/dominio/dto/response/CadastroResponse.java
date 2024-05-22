@@ -1,7 +1,7 @@
 package com.upe.br.acheie.dominio.dto.response;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public record CadastroResponse(String email, Date criacaoDaConta) {
+public record CadastroResponse(String email, LocalDate criacaoDaConta) {
 
 }
