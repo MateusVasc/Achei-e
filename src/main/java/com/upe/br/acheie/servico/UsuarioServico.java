@@ -1,10 +1,10 @@
-package com.upe.br.acheie.dominio.servico;
+package com.upe.br.acheie.servico;
 
+import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.modelos.Usuario;
-import com.upe.br.acheie.dominio.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
 
