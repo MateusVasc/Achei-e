@@ -1,7 +1,7 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.enums.Categoria;
-import com.upe.br.acheie.dominio.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -3,7 +3,7 @@ package com.upe.br.acheie.controlador;
 import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
 import com.upe.br.acheie.dominio.dto.request.LoginRequest;
 import com.upe.br.acheie.servico.AutenticacaoServico;
-import com.upe.br.acheie.utils.MensagemUtil;
+import com.upe.br.acheie.dominio.utils.MensagemUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

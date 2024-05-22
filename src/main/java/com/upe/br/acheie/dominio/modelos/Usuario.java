@@ -1,8 +1,8 @@
 package com.upe.br.acheie.dominio.modelos;
 
 import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
-import com.upe.br.acheie.dominio.enums.Curso;
-import com.upe.br.acheie.dominio.enums.Periodo;
+import com.upe.br.acheie.dominio.utils.enums.Curso;
+import com.upe.br.acheie.dominio.utils.enums.Periodo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

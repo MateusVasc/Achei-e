@@ -1,6 +1,6 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.enums.Tipo;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

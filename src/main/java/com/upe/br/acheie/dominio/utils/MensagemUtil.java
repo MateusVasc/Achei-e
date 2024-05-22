@@ -1,4 +1,4 @@
-package com.upe.br.acheie.utils;
+package com.upe.br.acheie.dominio.utils;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

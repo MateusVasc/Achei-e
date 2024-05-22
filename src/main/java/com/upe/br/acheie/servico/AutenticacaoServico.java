@@ -8,7 +8,7 @@ import com.upe.br.acheie.dominio.dto.response.ExcluirContaResponse;
 import com.upe.br.acheie.dominio.dto.response.LoginResponse;
 import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
-import com.upe.br.acheie.utils.AcheieException;
+import com.upe.br.acheie.dominio.utils.AcheieException;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
