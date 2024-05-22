@@ -15,4 +15,5 @@ public class AcheieException extends RuntimeException {
 		super(mensagem, origem);
 	}
 
+
 }

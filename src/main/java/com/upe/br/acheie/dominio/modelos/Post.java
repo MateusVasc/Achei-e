@@ -1,11 +1,13 @@
 package com.upe.br.acheie.dominio.modelos;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import com.upe.br.acheie.dominio.dto.PostDto;
 import com.upe.br.acheie.dominio.utils.enums.Tipo;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,6 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -15,6 +15,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +39,7 @@ public class Comentario {
 
   @Column(name = "criacao_do_comentario", nullable = false)
   private LocalDate criacaoDoComentario;
+
 
   @Column(name = "remocao_do_comentario")
   private LocalDate remocaoDoComentario;

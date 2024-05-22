@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Tipo { //dá para colocar só no estado
+
+public enum Tipo {
 
   PERDIDO("Perdido"),
   ENCONTRADO("Encontrado"),

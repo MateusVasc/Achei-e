@@ -17,5 +17,6 @@ public enum Curso {
   LICENCIATURA_EM_LETRAS("Licenciatura em Letras"),
   LICENCIATURA_EM_PEDAGOGIA("Licenciatura em Pedagogia"),
   LICENCIATURA_EM_MATEMATICA("Licenciatura em Matemática");
+
   private final String valor;
 }
