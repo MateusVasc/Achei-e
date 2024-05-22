@@ -4,10 +4,12 @@ import com.upe.br.acheie.config.TokenServico;
 import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
 import com.upe.br.acheie.dominio.dto.response.CadastroResponse;
 import com.upe.br.acheie.dominio.dto.request.LoginRequest;
+import com.upe.br.acheie.dominio.dto.response.ExcluirContaResponse;
 import com.upe.br.acheie.dominio.dto.response.LoginResponse;
 import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.utils.AcheieException;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +24,7 @@ public class AutenticacaoServico {
   private final TokenServico tokenServico;
   private final UsuarioRepositorio usuarioRepositorio;
 
-  public LoginResponse autenticarLogin(LoginRequest request) throws AcheieException {
+  public LoginResponse loginUsuario(LoginRequest request) throws AcheieException {
     var usuarioData = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
     var auth = this.authenticationManager.authenticate(usuarioData);
 
@@ -44,6 +46,23 @@ public class AutenticacaoServico {
     this.usuarioRepositorio.save(usuarioNovo);
 
     return new CadastroResponse(request.email(), request.criacaoDaConta());
+  }
+
+  public ExcluirContaResponse excluirUsuarioPorEmail(String email) throws AcheieException {
+    if (!validarEmail(email)) {
+      throw new AcheieException("Informe um email válido");
+    }
+
+    if (this.usuarioRepositorio.findByEmail(email) == null) {
+      throw new AcheieException("Informe um email cadastrado");
+    }
+
+    Usuario usuarioParaRemocao = (Usuario) this.usuarioRepositorio.findByEmail(email);
+    this.usuarioRepositorio.deleteById(usuarioParaRemocao.getId());
+    usuarioParaRemocao.setRemocaoDaConta(LocalDate.now());
+
+    return new ExcluirContaResponse(usuarioParaRemocao.getEmail(),
+        usuarioParaRemocao.getCriacaoDaConta(), usuarioParaRemocao.getRemocaoDaConta());
   }
 
   private boolean validarInfo(CadastroRequest request) {
