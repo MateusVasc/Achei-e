@@ -7,6 +7,8 @@ import com.upe.br.acheie.utils.MensagemUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/achei-e/auth")
 public class AutenticacaoControlador {
 
   private final AutenticacaoServico autenticacaoServico;
@@ -25,7 +27,7 @@ public class AutenticacaoControlador {
     ResponseEntity<Object> response;
 
     try {
-      response = ResponseEntity.ok(this.autenticacaoServico.autenticarLogin(request));
+      response = ResponseEntity.ok(this.autenticacaoServico.loginUsuario(request));
     } catch (Exception e) {
       response = ResponseEntity.badRequest()
           .body(new MensagemUtil(e.getMessage()));
@@ -35,7 +37,7 @@ public class AutenticacaoControlador {
   }
 
   @PostMapping("/cadastro")
-  public ResponseEntity<Object> cadastrarUsuario(@RequestBody CadastroRequest request) {
+  public ResponseEntity<Object> cadastro(@RequestBody CadastroRequest request) {
     ResponseEntity<Object> response;
 
     try {
@@ -43,6 +45,19 @@ public class AutenticacaoControlador {
     } catch (Exception e) {
       response = ResponseEntity.badRequest()
           .body(new MensagemUtil(e.getMessage()));
+    }
+
+    return response;
+  }
+
+  @DeleteMapping("/excluir/{email}")
+  public ResponseEntity<Object> excluirPorEmail(@PathVariable("email") String email) {
+    ResponseEntity<Object> response;
+
+    try {
+      response = ResponseEntity.ok(this.autenticacaoServico.excluirUsuarioPorEmail(email));
+    } catch (Exception e) {
+      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
     }
 
     return response;
