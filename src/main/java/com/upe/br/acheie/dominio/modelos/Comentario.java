@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,10 +29,10 @@ public class Comentario {
   private String assunto;
 
   @Column(name = "criacao_do_comentario", nullable = false)
-  private Date criacaoDoComentario;
+  private LocalDate criacaoDoComentario;
 
   @Column(name = "remocao_do_comentario", nullable = false)
-  private Date remocaoDoComentario;
+  private LocalDate remocaoDoComentario;
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)

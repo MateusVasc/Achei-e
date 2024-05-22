@@ -1,7 +1,7 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.enums.Categoria;
-import com.upe.br.acheie.dominio.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +46,7 @@ public class Item {
   private byte[] foto;
 
   @Column(nullable = false)
-  private Date data; // precisa? o post já tem a data
+  private LocalDate data; // precisa? o post já tem a data
 
   @OneToOne
   @JoinColumn(name = "id_post", nullable = false)

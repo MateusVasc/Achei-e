@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.enums;
+package com.upe.br.acheie.dominio.utils.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

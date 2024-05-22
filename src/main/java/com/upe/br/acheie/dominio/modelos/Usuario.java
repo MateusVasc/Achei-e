@@ -1,7 +1,8 @@
 package com.upe.br.acheie.dominio.modelos;
 
-import com.upe.br.acheie.dominio.enums.Curso;
-import com.upe.br.acheie.dominio.enums.Periodo;
+import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
+import com.upe.br.acheie.dominio.utils.enums.Curso;
+import com.upe.br.acheie.dominio.utils.enums.Periodo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,19 +16,23 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Usuario {
+public class Usuario implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -61,10 +66,10 @@ public class Usuario {
   private byte[] foto;
 
   @Column(name = "criacao_da_conta", nullable = false)
-  private Date criacaoDaConta;
+  private LocalDate criacaoDaConta;
 
   @Column(name = "remocao_da_conta")
-  private Date remocaoDaConta;
+  private LocalDate remocaoDaConta;
 
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Post> posts;
@@ -83,4 +88,50 @@ public class Usuario {
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Mensagem> mensagens;
 
+  public Usuario(CadastroRequest request) {
+    this.nome = request.nome();
+    this.sobrenome = request.sobrenome();
+    this.email = request.email();
+    this.senha = request.senha();
+    this.curso = request.curso();
+    this.periodo = request.periodo();
+    this.telefone = request.telefone();
+    this.foto = request.foto();
+    this.criacaoDaConta = request.criacaoDaConta();
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority("USUARIO"));
+  }
+
+  @Override
+  public String getPassword() {
+    return this.senha;
+  }
+
+  @Override
+  public String getUsername() {
+    return this.email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 }
