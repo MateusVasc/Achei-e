@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.servicos;
+package com.upe.br.acheie.dominio.servico;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.modelos.Usuario;
-import com.upe.br.acheie.dominio.repositorios.UsuarioRepositorio;
+import com.upe.br.acheie.dominio.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
 

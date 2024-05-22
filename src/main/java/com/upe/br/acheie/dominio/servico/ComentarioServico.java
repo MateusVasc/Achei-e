@@ -1,42 +1,48 @@
-package com.upe.br.acheie.dominio.servicos;
+package com.upe.br.acheie.dominio.servico;
 
 import java.util.UUID;
-
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
-import com.upe.br.acheie.dominio.dto.ItemDto;
-import com.upe.br.acheie.dominio.modelos.Item;
+import com.upe.br.acheie.dominio.dto.ComentarioDto;
+import com.upe.br.acheie.dominio.modelos.Comentario;
 import com.upe.br.acheie.dominio.modelos.Post;
-import com.upe.br.acheie.dominio.repositorios.ItemRepositorio;
-import com.upe.br.acheie.dominio.repositorios.PostRepositorio;
+import com.upe.br.acheie.dominio.modelos.Usuario;
+import com.upe.br.acheie.dominio.repositorio.ComentarioRepositorio;
+import com.upe.br.acheie.dominio.repositorio.PostRepositorio;
+import com.upe.br.acheie.dominio.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
+import com.upe.br.acheie.dominio.utils.enums.Cadastro;
 
 @Service
-public class ItemServico {
+public class ComentarioServico {
 
 	@Autowired
-	private ItemRepositorio itemRepo;
+	private ComentarioRepositorio comentarioRepo;
 	
 	@Autowired
 	private PostRepositorio postRepo;
 	
-	private final Logger log = LogManager.getLogger(ItemServico.class);
+	@Autowired
+	private UsuarioRepositorio usuarioRepo;
 	
-	public UUID cadastrarItem(ItemDto itemDto, UUID postId) {
+	private final Logger log = LogManager.getLogger(ComentarioServico.class);
+
+	public Cadastro cadastrarComentario(UUID postId,  UUID usuarioId, ComentarioDto comentario) {
 		try {
 			Post post = postRepo.getReferenceById(postId);
-			Item item = new Item(itemDto, post);
-			itemRepo.save(item);
-			return item.getId();
+			Usuario usuario = usuarioRepo.getReferenceById(usuarioId);
+			comentarioRepo.save(new Comentario(comentario, post, usuario));
+			return Cadastro.SUCESSO_CADASTRO;
 		} catch (Exception e) {
 			this.tratarErros(e);
 		}
-		return null;
+		return Cadastro.ERRO_CADASTRO;
 	}
 	
 	public void tratarErros(Exception e) {
@@ -51,5 +57,4 @@ public class ItemServico {
 			throw new AcheieException(e.getMessage(), e);
 		}
 	}
-	
 }

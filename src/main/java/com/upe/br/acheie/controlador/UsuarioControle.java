@@ -1,4 +1,4 @@
-package com.upe.br.acheie.controles;
+package com.upe.br.acheie.controlador;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.upe.br.acheie.dominio.dto.ErroDto;
-import com.upe.br.acheie.dominio.servicos.UsuarioServico;
+import com.upe.br.acheie.dominio.servico.UsuarioServico;
 
 @RestController
 public class UsuarioControle {

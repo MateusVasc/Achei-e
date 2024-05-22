@@ -1,4 +1,4 @@
-package com.upe.br.acheie.dominio.servicos;
+package com.upe.br.acheie.dominio.servico;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,9 +17,9 @@ import com.upe.br.acheie.dominio.dto.PostDto;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
 import com.upe.br.acheie.dominio.modelos.Usuario;
-import com.upe.br.acheie.dominio.repositorios.ItemRepositorio;
-import com.upe.br.acheie.dominio.repositorios.PostRepositorio;
-import com.upe.br.acheie.dominio.repositorios.UsuarioRepositorio;
+import com.upe.br.acheie.dominio.repositorio.ItemRepositorio;
+import com.upe.br.acheie.dominio.repositorio.PostRepositorio;
+import com.upe.br.acheie.dominio.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
 import com.upe.br.acheie.dominio.utils.enums.Cadastro;
