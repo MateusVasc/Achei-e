@@ -21,7 +21,7 @@ public class TokenServico {
       Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
       return JWT.create()
-          .withIssuer("auth-api")
+          .withIssuer("acheie-api")
           .withSubject(usuario.getEmail())
           .withExpiresAt(gerarDataDeExpiracao())
           .sign(algorithm);
