@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -36,13 +36,13 @@ public class Post {
   private Tipo tipo;
 
   @Column(name = "criacao_do_post", nullable = false)
-  private Date criacaoDoPost;
+  private LocalDate criacaoDoPost;
 
   @Column(name = "remocao_do_post")
-  private Date remocaoDoPost;
+  private LocalDate remocaoDoPost;
 
   @Column(name = "devolucao_do_item")
-  private Date devolucaoItem;
+  private LocalDate devolucaoItem;
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)

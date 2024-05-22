@@ -16,8 +16,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -66,10 +66,10 @@ public class Usuario implements UserDetails {
   private byte[] foto;
 
   @Column(name = "criacao_da_conta", nullable = false)
-  private Date criacaoDaConta;
+  private LocalDate criacaoDaConta;
 
   @Column(name = "remocao_da_conta")
-  private Date remocaoDaConta;
+  private LocalDate remocaoDaConta;
 
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Post> posts;
