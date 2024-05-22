@@ -1,5 +1,6 @@
 package com.upe.br.acheie.dominio.modelos;
 
+
 import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
 import com.upe.br.acheie.dominio.utils.enums.Curso;
 import com.upe.br.acheie.dominio.utils.enums.Periodo;
@@ -16,6 +17,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
