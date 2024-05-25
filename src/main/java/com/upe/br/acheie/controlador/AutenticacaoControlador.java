@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/achei-e/auth")
+@RequestMapping("/achei-e")
 public class AutenticacaoControlador {
 
   private final AutenticacaoServico autenticacaoServico;

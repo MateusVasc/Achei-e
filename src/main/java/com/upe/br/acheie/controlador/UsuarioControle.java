@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.servico.UsuarioServico;
 
 @RestController
+@RequestMapping("/achei-e")
 public class UsuarioControle {
 	
 	@Autowired
