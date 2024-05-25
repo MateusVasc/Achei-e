@@ -99,7 +99,6 @@ public class Usuario implements UserDetails {
     this.periodo = request.periodo();
     this.telefone = request.telefone();
     this.foto = request.foto();
-    this.criacaoDaConta = request.criacaoDaConta();
   }
 
   @Override
