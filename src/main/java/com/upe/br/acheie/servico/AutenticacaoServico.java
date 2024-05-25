@@ -43,9 +43,10 @@ public class AutenticacaoServico {
 
     Usuario usuarioNovo = new Usuario(request);
     usuarioNovo.setSenha(new BCryptPasswordEncoder().encode(request.senha()));
+    usuarioNovo.setCriacaoDaConta(LocalDate.now());
     this.usuarioRepositorio.save(usuarioNovo);
 
-    return new CadastroResponse(request.email(), request.criacaoDaConta());
+    return new CadastroResponse(usuarioNovo.getEmail(), usuarioNovo.getCriacaoDaConta());
   }
 
   public ExcluirContaResponse excluirUsuarioPorEmail(String email) throws AcheieException {

@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
-import com.upe.br.acheie.dominio.servico.ComentarioServico;
-import com.upe.br.acheie.dominio.servico.PostServico;
-import com.upe.br.acheie.dominio.utils.enums.Cadastro;
+import com.upe.br.acheie.servico.ComentarioServico;
+import com.upe.br.acheie.servico.PostServico;
 
 @RestController
 public class PostControle {

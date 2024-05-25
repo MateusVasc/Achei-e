@@ -15,6 +15,12 @@ public class AutorizacaoServico implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return this.usuarioRepositorio.findByEmail(username);
+    UserDetails usuario = this.usuarioRepositorio.findByEmail(username);
+
+    if (usuario == null) {
+      throw new UsernameNotFoundException("Usuario não encontrado para o email: " + username);
+    }
+
+    return usuario;
   }
 }
