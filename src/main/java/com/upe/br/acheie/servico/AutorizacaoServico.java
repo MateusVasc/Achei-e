@@ -18,7 +18,7 @@ public class AutorizacaoServico implements UserDetailsService {
     UserDetails usuario = this.usuarioRepositorio.findByEmail(username);
 
     if (usuario == null) {
-      throw new UsernameNotFoundException("User not found with email: " + username);
+      throw new UsernameNotFoundException("Usuario não encontrado para o email: " + username);
     }
 
     return usuario;
