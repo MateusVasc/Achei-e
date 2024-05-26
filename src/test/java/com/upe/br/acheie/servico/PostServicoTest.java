@@ -4,6 +4,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,9 +20,11 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.ItemDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
 import com.upe.br.acheie.dominio.dto.UsuarioDto;
+import com.upe.br.acheie.dominio.modelos.Comentario;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
 import com.upe.br.acheie.dominio.modelos.Usuario;
@@ -56,6 +60,8 @@ public class PostServicoTest {
 	UsuarioDto usuarioDto;
 	ItemDto itemDto;
 	PostDto postDto;
+	ComentarioDto comentarioDto;
+	Comentario comentario;
 	Post post;
 	Usuario usuario;
 	UUID id;
@@ -63,13 +69,18 @@ public class PostServicoTest {
 	
 	@BeforeEach
 	void init() {
-		item = new Item();
 		itemDto = new ItemDto(Estado.PERDIDO, Categoria.ELETRONICO, "Fone de ouvido rosa perdido no LAB1", "Fone de ouvido perdido", LocalDate.now(), null);
-		usuario = new Usuario();
 		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, "8199540337", null);
+		usuario = new Usuario(usuarioDto);
 		post = new Post();
 		postDto = new PostDto(Tipo.PERDIDO, LocalDate.now(), null, this.usuarioDto, this.itemDto, null);
-		id = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+		item = new Item(this.itemDto, this.post);
+		//comentarioDto = new ComentarioDto("Essa chave é minha!", usuarioDto, LocalDate.now(), null);
+		//comentario = new Comentario(comentarioDto, post, usuario);
+		id = UUID.randomUUID();
+		this.post.setComentarios(new ArrayList<Comentario>());
+		this.post.setUsuario(usuario);
+		this.post.setItem(item);
 	}
 	
 	@Test
@@ -102,6 +113,36 @@ public class PostServicoTest {
 		
 		Cadastro estadoCadastro = this.postServico.cadastrarPost(this.usuario.getId(), this.postDto);		
 		Assertions.assertEquals(Cadastro.ERRO_CADASTRO, estadoCadastro);
+	}
+	
+	@Test
+	@DisplayName("Deve obter um post específico com sucesso")
+	void buscarPostEspecificoCase1() {
+		when(this.postRepo.findById(this.post.getId())).thenReturn(Optional.of(this.post));
+		
+		PostDto localPostDto = this.postServico.buscarPostEspecifico(this.post.getId());
+		
+		Assertions.assertNotNull(localPostDto);
+	}
+	
+	@Test
+	@DisplayName("Não deve obter nenhum post. Optiona#Empty")
+	void buscarPostEspecificoCase2() {
+		when(this.postRepo.findById(this.post.getId())).thenReturn(Optional.empty());
+		
+		PostDto localPostDto = this.postServico.buscarPostEspecifico(this.post.getId());
+		
+		Assertions.assertNull(localPostDto);
+	}
+	
+	@Test
+	@DisplayName("Deve jogar exceção pelo ID ser nulo no momento da busca")
+	void buscarPostEspecificoCase3() {
+		when(this.postRepo.findById(this.post.getId())).thenThrow(IllegalArgumentException.class);
+		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
+		PostDto localPostDto = this.postServico.buscarPostEspecifico(null);
+		
+		Assertions.assertNull(localPostDto);
 	}
 
 }
