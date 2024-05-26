@@ -61,6 +61,9 @@ public class PostServico {
 	public PostDto buscarPostEspecifico(UUID idPost) {
 		try {
 			Optional<Post> post = postRepo.findById(idPost);
+			if (post.isEmpty()) {
+				return null;
+			}
 			List<ComentarioDto> comentarios = post.get().getComentarios().stream().
 					map(ComentarioDto::new).toList();
 			return new PostDto(post.get(), comentarios);

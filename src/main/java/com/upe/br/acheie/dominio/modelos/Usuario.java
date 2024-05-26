@@ -1,6 +1,7 @@
 package com.upe.br.acheie.dominio.modelos;
 
 
+import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.dto.request.CadastroRequest;
 import com.upe.br.acheie.dominio.utils.enums.Curso;
 import com.upe.br.acheie.dominio.utils.enums.Periodo;
@@ -99,6 +100,15 @@ public class Usuario implements UserDetails {
     this.periodo = request.periodo();
     this.telefone = request.telefone();
     this.foto = request.foto();
+  }
+  
+  public Usuario(UsuarioDto usuarioDto) {
+	  this.nome = usuarioDto.nome();
+	  this.sobrenome = usuarioDto.sobrenome();
+	  this.curso = usuarioDto.curso();
+	  this.periodo = usuarioDto.periodo();
+	  this.telefone = usuarioDto.telefone();
+	  this.foto = usuarioDto.foto();
   }
 
   @Override

@@ -34,8 +34,8 @@ public class ComentarioServico {
 
 	public Cadastro cadastrarComentario(UUID postId,  UUID usuarioId, ComentarioDto comentario) {
 		try {
-			Post post = postRepo.getReferenceById(postId);
-			Usuario usuario = usuarioRepo.getReferenceById(usuarioId);
+			Post post = postRepo.getReferenceById(postId); //consertar para impedir que se post for nulo, consiga retornar successo
+			Usuario usuario = usuarioRepo.getReferenceById(usuarioId); //consertar para impedir que se user for nulo retorne successo
 			comentarioRepo.save(new Comentario(comentario, post, usuario));
 			return Cadastro.SUCESSO_CADASTRO;
 		} catch (Exception e) {

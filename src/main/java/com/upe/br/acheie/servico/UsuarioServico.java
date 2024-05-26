@@ -26,14 +26,17 @@ public class UsuarioServico {
 	public UsuarioDto buscarUsuarioPorId(UUID idUsuario) { 
 		try {
 			Optional<Usuario> usuario = usuarioRepo.findById(idUsuario);
+			if (usuario.isEmpty()) {
+				return null;
+			}
 			return new UsuarioDto(usuario.get());
 		} catch (Exception e) {
-			this.tratarErro(e);
+			this.tratarErros(e);
 		}
 		return null;
 	}
 	
-	public void tratarErro(Exception e) {
+	public void tratarErros(Exception e) {
 		if (e instanceof IllegalArgumentException) {
 			log.error(MensagensErro.MSG_ID_NULO, e);
 			throw new AcheieException(MensagensErro.MSG_ID_NULO, e);
