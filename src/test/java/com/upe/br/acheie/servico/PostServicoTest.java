@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -126,7 +127,7 @@ public class PostServicoTest {
 	}
 	
 	@Test
-	@DisplayName("Não deve obter nenhum post. Optiona#Empty")
+	@DisplayName("Não deve obter nenhum post. Optional#Empty")
 	void buscarPostEspecificoCase2() {
 		when(this.postRepo.findById(this.post.getId())).thenReturn(Optional.empty());
 		
@@ -136,7 +137,7 @@ public class PostServicoTest {
 	}
 	
 	@Test
-	@DisplayName("Deve jogar exceção pelo ID ser nulo no momento da busca")
+	@DisplayName("Deve lançar exceção pelo ID ser nulo no momento da busca")
 	void buscarPostEspecificoCase3() {
 		when(this.postRepo.findById(this.post.getId())).thenThrow(IllegalArgumentException.class);
 		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
@@ -144,5 +145,28 @@ public class PostServicoTest {
 		
 		Assertions.assertNull(localPostDto);
 	}
+	
+	@Test
+	@DisplayName("Deve obter todos os posts")
+	void buscarPostsCase1() {
+		when(this.postRepo.findAll()).thenReturn(List.of(this.post));
+		
+		List<PostDto> postsDto = this.postServico.buscarPosts();
+		
+		Assertions.assertNotNull(postsDto);
+	}
+	
+	@Test
+	@DisplayName("Deve lançar exceção por findAll() retornar null")
+	void buscarPostsCase2() {
+		when(this.postRepo.findAll()).thenReturn(null);
+		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<NullPointerException>any());
+		
+		List<PostDto> postsDto = this.postServico.buscarPosts();
+		
+		Assertions.assertEquals(List.of(), postsDto);
+	}
+	
+	
 
 }
