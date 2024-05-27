@@ -1,6 +1,5 @@
 package com.upe.br.acheie.servico;
 
-import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,14 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
+import com.upe.br.acheie.dominio.modelos.Comentario;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
 import com.upe.br.acheie.dominio.modelos.Usuario;
-import com.upe.br.acheie.repositorio.ItemRepositorio;
-import com.upe.br.acheie.repositorio.PostRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
+import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 import com.upe.br.acheie.dominio.utils.enums.Cadastro;
+import com.upe.br.acheie.repositorio.ItemRepositorio;
+import com.upe.br.acheie.repositorio.PostRepositorio;
+import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 
 @Service
 public class PostServico {
@@ -34,6 +36,9 @@ public class PostServico {
 	
 	@Autowired
 	private ItemServico itemServico;
+	
+	@Autowired
+	private UsuarioServico usuarioServico;
 	
 	@Autowired
 	private ItemRepositorio itemRepo;
@@ -81,6 +86,24 @@ public class PostServico {
 		}
 		return List.of();
 	}
+	
+	public Atualizacao atualizarPost(UUID postId, PostDto postDto) {
+		try {
+			Post post = this.postRepo.getReferenceById(postId);
+			
+			post.setTipo(postDto.tipo());
+			post.setCriacaoDoPost(postDto.dataCriacao());
+			post.setRemocaoDoPost(postDto.dataRemocao());
+			this.usuarioServico.atualizarUsuario(post.getUsuario().getId(), postDto.usuario());
+			this.itemServico.atualizarItem(post.getItem().getId(), postDto.item());
+			
+			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return Atualizacao.ATUALIZACAO_COM_FALHA;
+	}
+	
 	
 	public void tratarErros(Exception e) {
 		if (e instanceof IllegalArgumentException) {

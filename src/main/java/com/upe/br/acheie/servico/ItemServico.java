@@ -9,12 +9,15 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.ItemDto;
+import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
+import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.repositorio.ItemRepositorio;
 import com.upe.br.acheie.repositorio.PostRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
+import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 
 @Service
 public class ItemServico {
@@ -37,6 +40,25 @@ public class ItemServico {
 			this.tratarErros(e);
 		}
 		return null;
+	}
+	
+	public Atualizacao atualizarItem(UUID idItem, ItemDto itemDto) { 
+		try {
+			Item item = itemRepo.getReferenceById(idItem);
+			item.setCategoria(itemDto.categoria());
+			item.setData(itemDto.data());
+			item.setDescricao(itemDto.descricao());
+			item.setTitulo(itemDto.titulo());
+			item.setEstado(itemDto.estado());
+			item.setFoto(itemDto.foto());
+			
+			this.itemRepo.save(item);
+			
+			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return Atualizacao.ATUALIZACAO_COM_FALHA;
 	}
 	
 	public void tratarErros(Exception e) {

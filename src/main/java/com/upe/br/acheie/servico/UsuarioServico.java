@@ -14,6 +14,7 @@ import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
+import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 
 @Service
 public class UsuarioServico {
@@ -34,6 +35,25 @@ public class UsuarioServico {
 			this.tratarErros(e);
 		}
 		return null;
+	}
+	
+	public Atualizacao atualizarUsuario(UUID idUsuario, UsuarioDto usuarioDto) { 
+		try {
+			Usuario usuario = usuarioRepo.getReferenceById(idUsuario);
+			usuario.setNome(usuarioDto.nome());
+			usuario.setSobrenome(usuarioDto.sobrenome());
+			usuario.setTelefone(usuarioDto.telefone());
+			usuario.setCurso(usuarioDto.curso());
+			usuario.setPeriodo(usuarioDto.periodo());
+			usuario.setFoto(usuarioDto.foto());
+			
+			this.usuarioRepo.save(usuario);
+			
+			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return Atualizacao.ATUALIZACAO_COM_FALHA;
 	}
 	
 	public void tratarErros(Exception e) {
