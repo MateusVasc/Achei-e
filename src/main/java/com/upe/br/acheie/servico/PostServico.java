@@ -1,5 +1,6 @@
 package com.upe.br.acheie.servico;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
-import com.upe.br.acheie.dominio.modelos.Comentario;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
 import com.upe.br.acheie.dominio.modelos.Usuario;
@@ -21,6 +21,9 @@ import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 import com.upe.br.acheie.dominio.utils.enums.Cadastro;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 import com.upe.br.acheie.repositorio.ItemRepositorio;
 import com.upe.br.acheie.repositorio.PostRepositorio;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
@@ -71,7 +74,7 @@ public class PostServico {
 			}
 			List<ComentarioDto> comentarios = post.get().getComentarios().stream().
 					map(ComentarioDto::new).toList();
-			return new PostDto(post.get(), comentarios);
+			return new PostDto(post.get());
 		} catch (Exception e) {
 			this.tratarErros(e);
 		}
@@ -80,7 +83,7 @@ public class PostServico {
 	
 	public List<PostDto> buscarPosts() {
 		try { 
-			return postRepo.findAll().stream().map(post -> new PostDto(post, List.of())).toList();
+			return postRepo.findAll().stream().map(post -> new PostDto(post)).toList();
 		} catch (Exception e) {
 			this.tratarErros(e);
 		}
@@ -102,6 +105,65 @@ public class PostServico {
 			this.tratarErros(e);
 		}
 		return Atualizacao.ATUALIZACAO_COM_FALHA;
+	}
+	
+	//Filtro: estado, categoria, tipo e data
+	
+	public List<PostDto> filtrarPostsPorTipo(Tipo tipo) {
+		try {
+		
+			List<Post> posts = this.postRepo.findByTipo(tipo);			
+			List<PostDto> postsDto = posts.stream().map(PostDto::new).toList();
+			
+			return postsDto;
+			
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return List.of();
+	}
+	
+	
+	public List<PostDto> filtrarPostsPorEstado(Estado estado) {
+		try {
+			List<Post> posts = this.postRepo.findByItemEstado(estado);
+			List<PostDto> postsDto = posts.stream().map(PostDto::new).toList();
+			
+			return postsDto;
+			
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return List.of();
+	}
+	
+	public List<PostDto> filtrarPostsPorCategoria(Categoria categoria) {
+		try {
+			List<Post> posts = this.postRepo.findByItemCategoria(categoria);
+			List<PostDto> postsDto = posts.stream().map(PostDto::new).toList();
+			
+			return postsDto;
+			
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return List.of();
+	}
+	
+	public List<PostDto> filtrarPostsPorData(LocalDate inicio, LocalDate fim) {
+		try {
+			if (fim == null) {
+				fim = LocalDate.now();
+			}
+			List<Post> posts = this.postRepo.findByItemData(inicio, fim);
+			List<PostDto> postsDto = posts.stream().map(PostDto::new).toList();
+			
+			return postsDto;
+			
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return List.of();
 	}
 	
 	

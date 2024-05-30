@@ -9,10 +9,10 @@ import com.upe.br.acheie.dominio.utils.enums.Tipo;
 public record PostDto(Tipo tipo, LocalDate dataCriacao, LocalDate dataRemocao, 
 		UsuarioDto usuario, ItemDto item, List<ComentarioDto> comentarios) {
 	
-	public PostDto(Post post, List<ComentarioDto> comentarios) {
+	public PostDto(Post post) {
 		this(post.getTipo(), post.getCriacaoDoPost(), post.getRemocaoDoPost(), 
 				new UsuarioDto(post.getUsuario()), new ItemDto(post.getItem()), 
-				comentarios);
+				post.getComentarios().stream().map(ComentarioDto::new).toList());
 	}
 
 }

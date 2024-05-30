@@ -1,5 +1,6 @@
 package com.upe.br.acheie.controlador;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,6 +22,9 @@ import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
 import com.upe.br.acheie.dominio.utils.MensagemUtil;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 import com.upe.br.acheie.servico.ComentarioServico;
 import com.upe.br.acheie.servico.PostServico;
 
@@ -83,6 +87,43 @@ public class PostControle {
 			return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(estadoAtualizacao.getMensagem()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-tipo") // tem que validar os dados que são passados para o filtro
+	public ResponseEntity<?> filtrarPostsPorTipo(@RequestParam(value="tipo", required=true)Tipo tipo) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorTipo(tipo));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	
+	@GetMapping("/posts-categoria")
+	public ResponseEntity<?> filtrarPostsPorCategoria(@RequestParam(value="categoria", required=true)Categoria categoria) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorCategoria(categoria));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-estado")
+	public ResponseEntity<?> filtrarPostsPorEstado(@RequestParam(value="estado", required=true)Estado estado) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorEstado(estado));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-data")
+	public ResponseEntity<?> filtrarPostsPorData(@RequestParam(value="inicio", required=true)LocalDate inicio, @RequestParam(value="fim")LocalDate fim) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorData(inicio, fim));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
 		}
 	}
 	

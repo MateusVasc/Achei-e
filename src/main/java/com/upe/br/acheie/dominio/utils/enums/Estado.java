@@ -12,4 +12,14 @@ public enum Estado {
   DEVOLVIDO("Devolvido");
 
   private final String valor;
+  
+  public static boolean eEstado(String palavra) {
+	  Estado[] estados = Estado.values();
+	  for (Estado estado : estados) {
+		  if (estado.valor.equals(palavra)) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
 }
