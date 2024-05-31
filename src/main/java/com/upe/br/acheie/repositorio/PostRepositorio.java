@@ -2,6 +2,7 @@ package com.upe.br.acheie.repositorio;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +29,8 @@ public interface PostRepositorio extends JpaRepository<Post, UUID> {
 	
 	@Query("SELECT p FROM Post p INNER JOIN Item i ON p.id = i.post.id WHERE i.data BETWEEN :inicio AND :fim")
 	List<Post> findByItemData(@Param("inicio")LocalDate inicio,@Param("fim")LocalDate fim);
+
+	@Query("SELECT p FROM Post p WHERE p.usuario.id = :usuarioId AND p.id = :postId")
+	Optional<Post> findByUsuarioIdAndPostId(@Param("usuarioId") UUID usuarioId, @Param("postId") UUID postId);
 	
 }
