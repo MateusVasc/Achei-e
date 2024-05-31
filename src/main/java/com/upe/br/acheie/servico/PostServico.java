@@ -1,5 +1,8 @@
 package com.upe.br.acheie.servico;
 
+import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
+import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
+import com.upe.br.acheie.dominio.dto.response.ExcluirPostResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -164,6 +167,43 @@ public class PostServico {
 			this.tratarErros(e);
 		}
 		return List.of();
+	}
+
+	public ExcluirPostResponse excluirPostPorId(UUID idPost, UUID idUsuario) {
+		Optional<Post> postParaRemover = this.postRepo.findByUsuarioIdAndPostId(idUsuario, idPost);
+
+		if (postParaRemover.isEmpty()) {
+			throw new AcheieException("Esse usuário não possui um post para este id");
+		}
+
+		this.postRepo.deleteById(idPost);
+		postParaRemover.get().setRemocaoDoPost(LocalDate.now());
+
+		return new ExcluirPostResponse(postParaRemover.get().getCriacaoDoPost(), postParaRemover.get().getRemocaoDoPost(),
+				postParaRemover.get().getUsuario().getId());
+	}
+
+	public EncerrarProcuraResponse encerrarProcuraDeItem(EncerrarProcuraRequest request) {
+		if (this.usuarioRepo.findById(request.idUsuario()).isEmpty()) {
+			throw new AcheieException("Não existe um usuário com este id");
+		}
+
+		Optional<Post> postParaEncerrar = this.postRepo.findById(request.idPost());
+
+		if (postParaEncerrar.isEmpty()) {
+			throw new AcheieException("Não existe um post com este id");
+		}
+
+		if (!postParaEncerrar.get().getUsuario().getId().equals(request.idUsuario())) {
+			throw new AcheieException("Um usuário não pode encerrar um post que não seja dele");
+		}
+
+		postParaEncerrar.get().setTipo(Tipo.DEVOLVIDO);
+		postParaEncerrar.get().setDevolucaoItem(LocalDate.now());
+		this.postRepo.save(postParaEncerrar.get());
+
+		return new EncerrarProcuraResponse(postParaEncerrar.get().getUsuario().getId(),
+				postParaEncerrar.get().getId(), postParaEncerrar.get().getDevolucaoItem());
 	}
 	
 	
