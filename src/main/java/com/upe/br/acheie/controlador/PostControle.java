@@ -1,5 +1,6 @@
 package com.upe.br.acheie.controlador;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
+import com.upe.br.acheie.dominio.utils.MensagemUtil;
+import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
+import com.upe.br.acheie.dominio.utils.enums.Categoria;
+import com.upe.br.acheie.dominio.utils.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 import com.upe.br.acheie.servico.ComentarioServico;
 import com.upe.br.acheie.servico.PostServico;
 
@@ -34,7 +41,7 @@ public class PostControle {
 	private static final Logger log = LogManager.getLogger(PostControle.class);
 	
 	@PostMapping("/novo-post/{usuarioId}")
-	public ResponseEntity cadastrarPost(@PathVariable UUID usuarioId, 
+	public ResponseEntity<?> cadastrarPost(@PathVariable UUID usuarioId, 
 			@RequestBody PostDto postDto) {
 		try {
 			this.postServico.cadastrarPost(usuarioId, postDto);
@@ -45,7 +52,7 @@ public class PostControle {
 	}
 	
 	@GetMapping("/post/{id}")
-	public ResponseEntity buscarPostPorId(@PathVariable UUID id) {
+	public ResponseEntity<?> buscarPostPorId(@PathVariable UUID id) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPostEspecifico(id));
 		} catch (Exception e) {
@@ -54,7 +61,7 @@ public class PostControle {
 	}
 	
 	@GetMapping("/posts")
-	public ResponseEntity buscarPosts() {
+	public ResponseEntity<?> buscarPosts() {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
 		} catch (Exception e) {
@@ -63,13 +70,60 @@ public class PostControle {
 	}
 	
 	@PostMapping("/post/{postId}")
-	public ResponseEntity cadastrarComentario(@PathVariable UUID postId, 
+	public ResponseEntity<?> cadastrarComentario(@PathVariable UUID postId, 
 			@RequestParam("usuarioId") UUID usuarioId, @RequestBody ComentarioDto comentario) {
 		try {
 			this.comentarioServico.cadastrarComentario(postId, usuarioId, comentario);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.tratarErro(e));
+		}
+	}
+	
+	@PutMapping("/post")
+	public ResponseEntity<?> atualizarPost(@RequestParam(value="postId") UUID postId, @RequestBody PostDto postDto) {
+		try {
+			Atualizacao estadoAtualizacao = this.postServico.atualizarPost(postId, postDto);
+			return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(estadoAtualizacao.getMensagem()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-tipo") // tem que validar os dados que são passados para o filtro
+	public ResponseEntity<?> filtrarPostsPorTipo(@RequestParam(value="tipo", required=true)Tipo tipo) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorTipo(tipo));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	
+	@GetMapping("/posts-categoria")
+	public ResponseEntity<?> filtrarPostsPorCategoria(@RequestParam(value="categoria", required=true)Categoria categoria) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorCategoria(categoria));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-estado")
+	public ResponseEntity<?> filtrarPostsPorEstado(@RequestParam(value="estado", required=true)Estado estado) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorEstado(estado));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
+		}
+	}
+	
+	@GetMapping("/posts-data")
+	public ResponseEntity<?> filtrarPostsPorData(@RequestParam(value="inicio", required=true)LocalDate inicio, @RequestParam(value="fim")LocalDate fim) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorData(inicio, fim));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
 		}
 	}
 	
