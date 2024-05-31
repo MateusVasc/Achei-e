@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.upe.br.acheie.dominio.dto.EmailDto;
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.UsuarioDto;
+import com.upe.br.acheie.dominio.dto.request.LoginRequest;
 import com.upe.br.acheie.dominio.utils.MensagemUtil;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 import com.upe.br.acheie.servico.UsuarioServico;
@@ -46,6 +48,25 @@ public class UsuarioControle {
 			return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(atualizarUsuario.getMensagem()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
+		}
+	}
+	
+	@PutMapping("/usuario/nova-senha")
+	public ResponseEntity<?> requisitarMudarSenha(@RequestBody EmailDto emailDto) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(this.usuarioServico.requisitarMudarSenha(emailDto.email())));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.tratarErro(e));
+		}
+	}
+	
+	@PutMapping("usuario/redefinir-senha")
+	public ResponseEntity<?> atualizarSenha(@RequestBody LoginRequest login) {
+		try {
+			Atualizacao atualizarSenha = this.usuarioServico.atualizarSenha(login);
+			return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(atualizarSenha.getMensagem()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.tratarErro(e));
 		}
 	}
 	

@@ -19,6 +19,7 @@ public class MensagensErro {
 	public static final String MSG_CLAIM_AUSENTE = "Claim a ser verificado não foi informado";
 	public static final String MSG_ERRO_CLAIM = "O claim informado é inválido";
 	public static final String MSG_ENUM_FILTRO = "O valor de filtro informado é inválido";
+	public static final String MSG_ERRO_NOVA_SENHA = "Houve um erro na solicitação de mudança de senha. Tente novamente!";
 	
 	private MensagensErro() {}
 	}
