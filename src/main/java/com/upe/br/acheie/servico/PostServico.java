@@ -1,8 +1,5 @@
 package com.upe.br.acheie.servico;
 
-import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
-import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
-import com.upe.br.acheie.dominio.dto.response.ExcluirPostResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
+import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
+import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
+import com.upe.br.acheie.dominio.dto.response.ExcluirPostResponse;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
 import com.upe.br.acheie.dominio.modelos.Usuario;
