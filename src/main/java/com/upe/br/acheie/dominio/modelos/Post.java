@@ -25,11 +25,14 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Indexed
 public class Post {
 
   @Id
@@ -55,6 +58,7 @@ public class Post {
   private Usuario usuario;
 
   @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+  @IndexedEmbedded(includePaths = {"titulo", "descricao"})
   private Item item;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -16,7 +16,7 @@ import com.upe.br.acheie.dominio.utils.enums.Estado;
 import com.upe.br.acheie.dominio.utils.enums.Tipo;
 
 @Repository
-public interface PostRepositorio extends JpaRepository<Post, UUID> {
+public interface PostRepositorio extends PesquisaDeTextoRepositorio<Post, UUID> {
 
 
 	List<Post> findByTipo(Tipo tipo);

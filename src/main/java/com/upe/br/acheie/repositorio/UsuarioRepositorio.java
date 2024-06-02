@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.upe.br.acheie.dominio.modelos.Usuario;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UsuarioRepositorio extends JpaRepository<Usuario, UUID> {
 
   UserDetails findByEmail(String email);

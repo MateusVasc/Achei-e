@@ -1,5 +1,6 @@
 package com.upe.br.acheie.controlador;
 
+import com.upe.br.acheie.dominio.dto.request.BuscaPorTextoRequest;
 import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -69,6 +70,21 @@ public class PostControle {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
     }
+  }
+
+  @GetMapping("/posts/texto")
+  public ResponseEntity<Object> buscarPostsPorTexto(@RequestBody BuscaPorTextoRequest request) {
+    ResponseEntity<Object> response;
+
+    try {
+      response = ResponseEntity.ok(
+          this.postServico.buscarPostsPorTexto(request.texto(), request.campos(),
+              request.limite()));
+    } catch (Exception e) {
+      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
+    }
+
+    return response;
   }
 
   @PostMapping("/post/{postId}")
@@ -158,7 +174,8 @@ public class PostControle {
     ResponseEntity<Object> response;
 
     try {
-      response = ResponseEntity.ok(this.comentarioServico.excluirComentarioPorId(idPost, idUsuario, idComentario));
+      response = ResponseEntity.ok(
+          this.comentarioServico.excluirComentarioPorId(idPost, idUsuario, idComentario));
     } catch (Exception e) {
       response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
     }
