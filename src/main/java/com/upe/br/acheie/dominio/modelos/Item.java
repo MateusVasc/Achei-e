@@ -20,11 +20,14 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Indexed
 public class Item {
 
   @Id
@@ -41,9 +44,11 @@ public class Item {
   private Categoria categoria; // pensar quais seriam as categorias (vão ser mtas provavelmente...)
 
   @Column(nullable = false)
+  @FullTextField
   private String descricao;
 
   @Column(nullable = false)
+  @FullTextField
   private String titulo;
 
   @Column(nullable = false)
