@@ -38,7 +38,8 @@ public class UsuarioServicoTeste {
 	
 	@BeforeEach
 	void init() {
-		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, "8199540337", null);
+		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, 
+				"8199540337", null);
 		usuario = new Usuario(usuarioDto);
 	}
 	

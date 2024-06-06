@@ -1,6 +1,5 @@
 package com.upe.br.acheie.servico;
 
-import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,14 +7,21 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.UsuarioDto;
+import com.upe.br.acheie.dominio.dto.request.LoginRequest;
 import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import com.upe.br.acheie.dominio.utils.MensagensErro;
+import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
+import com.upe.br.acheie.repositorio.UsuarioRepositorio;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioServico {
 	
 	@Autowired
@@ -34,6 +40,54 @@ public class UsuarioServico {
 			this.tratarErros(e);
 		}
 		return null;
+	}
+	
+	public Atualizacao atualizarUsuario(UUID idUsuario, UsuarioDto usuarioDto) { 
+		try {
+			Usuario usuario = usuarioRepo.getReferenceById(idUsuario);
+			usuario.setNome(usuarioDto.nome());
+			usuario.setSobrenome(usuarioDto.sobrenome());
+			usuario.setTelefone(usuarioDto.telefone());
+			usuario.setCurso(usuarioDto.curso());
+			usuario.setPeriodo(usuarioDto.periodo());
+			usuario.setFoto(usuarioDto.foto());
+			
+			this.usuarioRepo.save(usuario);
+			
+			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return Atualizacao.ATUALIZACAO_COM_FALHA;
+	}
+	
+	public String requisitarMudarSenha(String email) {
+		try {
+			email = email.replace(" ", "");
+			Usuario usuario = usuarioRepo.getByEmail(email);
+			if (usuario == null) {
+				throw new AcheieException(MensagensErro.MSG_ERRO_NOVA_SENHA);
+			}
+			return "O link para redefinição de senha foi enviado para o seu e-mail.";
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return MensagensErro.MSG_ERRO_NOVA_SENHA;
+	}
+	
+	public Atualizacao atualizarSenha(LoginRequest login) {
+		try {
+			Usuario usuario = usuarioRepo.getByEmail(login.email());
+			if (usuario == null) {
+				throw new AcheieException(MensagensErro.MSG_ERRO_NOVA_SENHA);
+			}
+			usuario.setSenha(new BCryptPasswordEncoder().encode(login.senha()));
+			this.usuarioRepo.save(usuario);
+			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+		} catch (Exception e) {
+			this.tratarErros(e);
+		}
+		return Atualizacao.ATUALIZACAO_COM_FALHA;
 	}
 	
 	public void tratarErros(Exception e) {

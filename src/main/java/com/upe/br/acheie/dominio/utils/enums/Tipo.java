@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-
 public enum Tipo {
 
   PERDIDO("Perdido"),
@@ -13,4 +12,14 @@ public enum Tipo {
   DEVOLVIDO("Devolvido");
 
   private final String valor;
+  
+  public static boolean eTipo(String palavra) {
+	  Tipo[] tipos = Tipo.values();
+	  for (Tipo tipo : tipos) {
+		  if (tipo.valor.equals(palavra)) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
 }
