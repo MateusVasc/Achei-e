@@ -258,5 +258,5 @@ nomes das variáveis e seus valores
 
 ## Autores
 
-| [<img src="https://avatars0.githubusercontent.com/MateusVasc" width="100px;"/><br /><sub><b>Mateus Vasconcelos</b></sub>](www.linkedin.com/in/mateus-vasconcelos-araujo)<br /> | [<img src="https://avatars.githubusercontent.com/u/122832634?v=4" width="100px;"/><br /><sub><b>Pedro Correia</b></sub>](https://github.com/Pedro-Bezerra)<br /> |
+| [<img src="https://avatars0.githubusercontent.com/MateusVasc" width="100px;"/><br /><sub><b>Mateus Vasconcelos</b></sub>](https://www.linkedin.com/in/mateus-vasconcelos-araujo/)<br /> | [<img src="https://avatars.githubusercontent.com/u/122832634?v=4" width="100px;"/><br /><sub><b>Pedro Correia</b></sub>](https://github.com/Pedro-Bezerra)<br /> |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
