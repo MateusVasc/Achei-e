@@ -26,7 +26,7 @@ O Achei-e é uma plataforma online que oferece uma rede social dedicada à gest�
 
 <h3>Pré-requisitos: </h3>
 
-**Instalação do [JDK 17](https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html) (Java SE Development Kit)**
+**Instalação do [JDK 19](https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html) (Java SE Development Kit)**
 
 **Instalação do [Intellij](https://www.jetbrains.com/pt-br/idea/download/?section=windows) ou [Eclipse](https://www.eclipse.org/downloads/)**
 
