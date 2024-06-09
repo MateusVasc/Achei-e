@@ -29,7 +29,8 @@ public class AutenticacaoServico {
     var auth = this.authenticationManager.authenticate(usuarioData);
 
     var token = tokenServico.gerarToken((Usuario) auth.getPrincipal());
-    return new LoginResponse(token);
+    Usuario usuario = (Usuario) this.usuarioRepositorio.findByEmail(request.email());
+    return new LoginResponse(usuario.getId(), token);
   }
 
   public CadastroResponse cadastrarUsuario(CadastroRequest request) throws AcheieException {
