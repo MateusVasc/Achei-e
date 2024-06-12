@@ -11,6 +11,8 @@ import com.upe.br.acheie.dominio.utils.MensagensErro;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -85,14 +87,38 @@ public class AutenticacaoServico {
   }
 
   private boolean validarEmail(String email) {
-    return email != null && !email.trim().isEmpty() && email.length() > 4;
+    if (email == null || email.trim().isEmpty()) {
+      return false;
+    }
+
+    String emailRegex = "^[^@]{5,}@upe\\.br$";
+    Pattern pattern = Pattern.compile(emailRegex);
+    Matcher matcher = pattern.matcher(email);
+
+    return matcher.matches();
   }
 
   private boolean validarSenha(String senha) {
-    return senha != null && !senha.trim().isEmpty() && senha.length() > 4;
+    if (senha == null || senha.trim().isEmpty()) {
+      return false;
+    }
+
+    String senhaRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+    Pattern pattern = Pattern.compile(senhaRegex);
+    Matcher matcher = pattern.matcher(senha);
+
+    return matcher.matches();
   }
 
   private boolean validarTelefone(String telefone) {
-    return telefone != null && !telefone.trim().isEmpty() && telefone.length() > 4;
+    if (telefone == null || telefone.trim().isEmpty()) {
+      return false;
+    }
+
+    String telefoneRegex = "^\\d{10}$";
+    Pattern pattern = Pattern.compile(telefoneRegex);
+    Matcher matcher = pattern.matcher(telefone);
+
+    return matcher.matches();
   }
 }
