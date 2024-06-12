@@ -7,6 +7,7 @@ import com.upe.br.acheie.dominio.dto.request.LoginRequest;
 import com.upe.br.acheie.dominio.dto.response.ExcluirContaResponse;
 import com.upe.br.acheie.dominio.dto.response.LoginResponse;
 import com.upe.br.acheie.dominio.modelos.Usuario;
+import com.upe.br.acheie.dominio.utils.MensagensErro;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
 import java.time.LocalDate;
@@ -35,11 +36,11 @@ public class AutenticacaoServico {
 
   public CadastroResponse cadastrarUsuario(CadastroRequest request) throws AcheieException {
     if (!validarInfo(request)) {
-      throw new AcheieException("Informe informações válidas");
+      throw new AcheieException(MensagensErro.MSG_INFO_CADASTRO_INVALIDAS);
     }
 
     if (this.usuarioRepositorio.findByEmail(request.email()) != null) {
-      throw new AcheieException("Este e-mail já está cadastrado");
+      throw new AcheieException(MensagensErro.MSG_EMAIL_CADASTRADO);
     }
 
     Usuario usuarioNovo = new Usuario(request);
@@ -52,11 +53,11 @@ public class AutenticacaoServico {
 
   public ExcluirContaResponse excluirUsuarioPorEmail(String email) throws AcheieException {
     if (!validarEmail(email)) {
-      throw new AcheieException("Informe um email válido");
+      throw new AcheieException(MensagensErro.MSG_EMAIL_INVALIDO);
     }
 
     if (this.usuarioRepositorio.findByEmail(email) == null) {
-      throw new AcheieException("Informe um email cadastrado");
+      throw new AcheieException(MensagensErro.MSG_EMAIL_CADASTRADO);
     }
 
     Usuario usuarioParaRemocao = (Usuario) this.usuarioRepositorio.findByEmail(email);
