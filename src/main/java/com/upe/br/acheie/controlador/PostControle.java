@@ -2,12 +2,18 @@ package com.upe.br.acheie.controlador;
 
 import com.upe.br.acheie.dominio.dto.request.BuscaPorTextoRequest;
 import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
+import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
+import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
+import com.upe.br.acheie.dominio.dto.response.ExcluirComentarioResponse;
+import com.upe.br.acheie.dominio.dto.response.ExcluirPostResponse;
+import com.upe.br.acheie.dominio.utils.enums.Cadastro;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
-import com.upe.br.acheie.dominio.utils.MensagemUtil;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 import com.upe.br.acheie.dominio.utils.enums.Categoria;
 import com.upe.br.acheie.dominio.utils.enums.Estado;
@@ -33,167 +38,98 @@ import com.upe.br.acheie.servico.PostServico;
 
 @RestController
 @RequestMapping("/achei-e")
+@RequiredArgsConstructor
 public class PostControle {
 
-  @Autowired
-  private PostServico postServico;
+  private final PostServico postServico;
 
-  @Autowired
-  private ComentarioServico comentarioServico;
+  private final ComentarioServico comentarioServico;
 
   private static final Logger log = LogManager.getLogger(PostControle.class);
 
   @PostMapping("/novo-post/{usuarioId}")
-  public ResponseEntity<?> cadastrarPost(@PathVariable UUID usuarioId,
+  public ResponseEntity<CadastroPostResponse> cadastrarPost(@PathVariable UUID usuarioId,
       @RequestBody PostDto postDto) {
-    try {
-      this.postServico.cadastrarPost(usuarioId, postDto);
-      return ResponseEntity.status(HttpStatus.CREATED).build();
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(this.postServico.cadastrarPost(usuarioId, postDto));
   }
 
   @GetMapping("/post/{id}")
-  public ResponseEntity<?> buscarPostPorId(@PathVariable UUID id) {
-    try {
-      return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPostEspecifico(id));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+  public ResponseEntity<PostDto> buscarPostPorId(@PathVariable UUID id) {
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPostEspecifico(id));
   }
 
   @GetMapping("/posts")
-  public ResponseEntity<?> buscarPosts() {
-    try {
-      return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+  public ResponseEntity<List<PostDto>> buscarPosts() {
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
   }
 
   @GetMapping("/posts/texto")
-  public ResponseEntity<Object> buscarPostsPorTexto(@RequestBody BuscaPorTextoRequest request) {
-    ResponseEntity<Object> response;
-
-    try {
-      response = ResponseEntity.ok(
-          this.postServico.buscarPostsPorTexto(request.texto(), request.campos(),
-              request.limite()));
-    } catch (Exception e) {
-      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
-    }
-
-    return response;
+  public ResponseEntity<List<PostDto>> buscarPostsPorTexto(
+      @RequestBody BuscaPorTextoRequest request) {
+    return ResponseEntity.ok(
+        this.postServico.buscarPostsPorTexto(request.texto(), request.campos(), request.limite()));
   }
 
   @PostMapping("/post/{postId}")
-  public ResponseEntity<?> cadastrarComentario(@PathVariable UUID postId,
+  public ResponseEntity<Cadastro> cadastrarComentario(@PathVariable UUID postId,
       @RequestParam("usuarioId") UUID usuarioId, @RequestBody ComentarioDto comentario) {
-    try {
-      this.comentarioServico.cadastrarComentario(postId, usuarioId, comentario);
-      return ResponseEntity.status(HttpStatus.CREATED).build();
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(this.comentarioServico.cadastrarComentario(postId, usuarioId, comentario));
   }
 
   @PutMapping("/post")
-  public ResponseEntity<?> atualizarPost(@RequestParam(value = "postId") UUID postId,
+  public ResponseEntity<Atualizacao> atualizarPost(@RequestParam(value = "postId") UUID postId,
       @RequestBody PostDto postDto) {
-    try {
-      Atualizacao estadoAtualizacao = this.postServico.atualizarPost(postId, postDto);
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(new MensagemUtil(estadoAtualizacao.getMensagem()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(this.postServico.atualizarPost(postId, postDto));
   }
 
   @GetMapping("/posts-tipo") // tem que validar os dados que são passados para o filtro
-  public ResponseEntity<?> filtrarPostsPorTipo(
+  public ResponseEntity<List<PostDto>> filtrarPostsPorTipo(
       @RequestParam(value = "tipo", required = true) Tipo tipo) {
-    try {
-      return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorTipo(tipo));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorTipo(tipo));
   }
 
 
   @GetMapping("/posts-categoria")
-  public ResponseEntity<?> filtrarPostsPorCategoria(
+  public ResponseEntity<List<PostDto>> filtrarPostsPorCategoria(
       @RequestParam(value = "categoria", required = true) Categoria categoria) {
-    try {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(postServico.filtrarPostsPorCategoria(categoria));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postServico.filtrarPostsPorCategoria(categoria));
   }
 
   @GetMapping("/posts-estado")
-  public ResponseEntity<?> filtrarPostsPorEstado(
+  public ResponseEntity<List<PostDto>> filtrarPostsPorEstado(
       @RequestParam(value = "estado", required = true) Estado estado) {
-    try {
-      return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorEstado(estado));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorEstado(estado));
   }
 
   @GetMapping("/posts-data")
-  public ResponseEntity<?> filtrarPostsPorData(
+  public ResponseEntity<List<PostDto>> filtrarPostsPorData(
       @RequestParam(value = "inicio", required = true) LocalDate inicio,
       @RequestParam(value = "fim") LocalDate fim) {
-    try {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(postServico.filtrarPostsPorData(inicio, fim));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.tratarErro(e));
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.filtrarPostsPorData(inicio, fim));
   }
 
   @DeleteMapping("/excluir-post/{idPost}")
-  public ResponseEntity<Object> excluirPostPorId(@PathVariable("idPost") UUID idPost,
+  public ResponseEntity<ExcluirPostResponse> excluirPostPorId(@PathVariable("idPost") UUID idPost,
       @RequestParam("idUsuario") UUID idUsuario) {
-    ResponseEntity<Object> response;
-
-    try {
-      response = ResponseEntity.ok(this.postServico.excluirPostPorId(idPost, idUsuario));
-    } catch (Exception e) {
-      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
-    }
-
-    return response;
+    return ResponseEntity.ok(this.postServico.excluirPostPorId(idPost, idUsuario));
   }
 
   @DeleteMapping("/post/excluir-comentario/{idPost}")
-  public ResponseEntity<Object> excluirComentarioPorId(@PathVariable("idPost") UUID idPost,
+  public ResponseEntity<ExcluirComentarioResponse> excluirComentarioPorId(
+      @PathVariable("idPost") UUID idPost,
       @RequestParam("idUsuario") UUID idUsuario, @RequestParam("idComentario") UUID idComentario) {
-    ResponseEntity<Object> response;
-
-    try {
-      response = ResponseEntity.ok(
-          this.comentarioServico.excluirComentarioPorId(idPost, idUsuario, idComentario));
-    } catch (Exception e) {
-      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
-    }
-
-    return response;
+    return ResponseEntity.ok(
+        this.comentarioServico.excluirComentarioPorId(idPost, idUsuario, idComentario));
   }
 
   @PutMapping("/post/encerrar-procura")
-  public ResponseEntity<Object> encerrarProcuraDeItem(@RequestBody EncerrarProcuraRequest request) {
-    ResponseEntity<Object> response;
-
-    try {
-      response = ResponseEntity.ok(this.postServico.encerrarProcuraDeItem(request));
-    } catch (Exception e) {
-      response = ResponseEntity.badRequest().body(new MensagemUtil(e.getMessage()));
-    }
-
-    return response;
+  public ResponseEntity<EncerrarProcuraResponse> encerrarProcuraDeItem(
+      @RequestBody EncerrarProcuraRequest request) {
+    return ResponseEntity.ok(this.postServico.encerrarProcuraDeItem(request));
   }
 
   public ErroDto tratarErro(Exception e) {

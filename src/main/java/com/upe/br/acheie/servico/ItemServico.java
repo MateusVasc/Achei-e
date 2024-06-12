@@ -2,17 +2,14 @@ package com.upe.br.acheie.servico;
 
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.dominio.dto.ItemDto;
-import com.upe.br.acheie.dominio.dto.UsuarioDto;
 import com.upe.br.acheie.dominio.modelos.Item;
 import com.upe.br.acheie.dominio.modelos.Post;
-import com.upe.br.acheie.dominio.modelos.Usuario;
 import com.upe.br.acheie.repositorio.ItemRepositorio;
 import com.upe.br.acheie.repositorio.PostRepositorio;
 import com.upe.br.acheie.dominio.utils.AcheieException;
@@ -20,58 +17,37 @@ import com.upe.br.acheie.dominio.utils.MensagensErro;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServico {
 
-	@Autowired
-	private ItemRepositorio itemRepo;
-	
-	@Autowired
-	private PostRepositorio postRepo;
-	
-	private final Logger log = LogManager.getLogger(ItemServico.class);
-	
-	public UUID cadastrarItem(ItemDto itemDto, UUID postId) {
-		try {
-			Post post = postRepo.getReferenceById(postId);
-			Item item = new Item(itemDto, post);
-			itemRepo.save(item);
-			return item.getId();
-		} catch (Exception e) {
-			this.tratarErros(e);
-		}
-		return null;
-	}
-	
-	public Atualizacao atualizarItem(UUID idItem, ItemDto itemDto) { 
-		try {
-			Item item = itemRepo.getReferenceById(idItem);
-			item.setCategoria(itemDto.categoria());
-			item.setData(itemDto.data());
-			item.setDescricao(itemDto.descricao());
-			item.setTitulo(itemDto.titulo());
-			item.setEstado(itemDto.estado());
-			item.setFoto(itemDto.foto());
-			
-			this.itemRepo.save(item);
-			
-			return Atualizacao.ATUALIZACAO_COM_SUCESSO;
-		} catch (Exception e) {
-			this.tratarErros(e);
-		}
-		return Atualizacao.ATUALIZACAO_COM_FALHA;
-	}
-	
-	public void tratarErros(Exception e) {
-		if (e instanceof IllegalArgumentException) {
-			log.error(MensagensErro.MSG_ELEMENTO_AUSENTE, e);
-			throw new AcheieException(MensagensErro.MSG_ELEMENTO_AUSENTE, e);
-		} else if (e instanceof OptimisticLockingFailureException) {
-			log.error(MensagensErro.MSG_ERRO_INESPERADO, e);
-			throw new AcheieException(MensagensErro.MSG_ERRO_INESPERADO, e);
-		} else {
-			log.error(e.getMessage(), e);
-			throw new AcheieException(e.getMessage(), e);
-		}
-	}
-	
+  private final ItemRepositorio itemRepo;
+
+  private final PostRepositorio postRepo;
+
+  private final Logger log = LogManager.getLogger(ItemServico.class);
+
+  public UUID cadastrarItem(ItemDto itemDto, UUID postId) {
+    Post post = postRepo.findById(postId)
+        .orElseThrow(() -> new AcheieException(MensagensErro.MSG_POST_NAO_ENCONTRADO));
+    Item item = new Item(itemDto, post);
+
+    itemRepo.save(item);
+
+    return item.getId();
+  }
+
+  public Atualizacao atualizarItem(UUID idItem, ItemDto itemDto) {
+    Item item = this.itemRepo.findById(idItem)
+        .orElseThrow(() -> new AcheieException(MensagensErro.MSG_ITEM_NAO_ENCONTRADO));
+
+    item.setCategoria(itemDto.categoria());
+    item.setData(itemDto.data());
+    item.setDescricao(itemDto.descricao());
+    item.setTitulo(itemDto.titulo());
+    item.setEstado(itemDto.estado());
+    item.setFoto(itemDto.foto());
+
+    this.itemRepo.save(item);
+    return Atualizacao.ATUALIZACAO_COM_SUCESSO;
+  }
 }
