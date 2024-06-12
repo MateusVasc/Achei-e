@@ -20,6 +20,15 @@ public class MensagensErro {
 	public static final String MSG_ERRO_CLAIM = "O claim informado é inválido";
 	public static final String MSG_ENUM_FILTRO = "O valor de filtro informado é inválido";
 	public static final String MSG_ERRO_NOVA_SENHA = "Houve um erro na solicitação de mudança de senha. Tente novamente!";
-	
+	public static final String MSG_USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
+	public static final String MSG_ITEM_NAO_ENCONTRADO = "Item não encontrado";
+	public static final String MSG_POST_NAO_ENCONTRADO = "Post não encontrado";
+	public static final String MSG_POST_DE_USUARIO_NAO_ENCONTRADO = "Este usuário não possui um post para este id";
+	public static final String MSG_COMENTARIO_DE_USUARIO_NAO_ENCONTRADO = "Este usuário não possui um comentário para este post";
+	public static final String MSG_ENCERRAR_POST_INVALIDO = "Um usuário não pode encerrar um post que não seja dele";
+	public static final String MSG_INFO_CADASTRO_INVALIDAS = "Informações de cadastro inválidas";
+	public static final String MSG_EMAIL_CADASTRADO = "Este email já está cadastrado";
+	public static final String MSG_EMAIL_INVALIDO = "Informe um email válido";
+
 	private MensagensErro() {}
 	}

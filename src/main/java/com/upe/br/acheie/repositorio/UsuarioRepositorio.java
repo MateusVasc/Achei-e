@@ -1,5 +1,6 @@
 package com.upe.br.acheie.repositorio;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, UUID> {
   UserDetails findByEmail(String email);
   
   @Query("SELECT u FROM Usuario u WHERE u.email = :email")
-  Usuario getByEmail(String email);
+  Optional<Usuario> getByEmail(String email);
 
   void deleteByEmail(String email);
 }
