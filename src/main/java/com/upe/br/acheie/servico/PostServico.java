@@ -1,5 +1,6 @@
 package com.upe.br.acheie.servico;
 
+import com.upe.br.acheie.dominio.dto.request.CadastrarPostRequest;
 import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -47,13 +48,18 @@ public class PostServico {
       "item.descricao");
 
   @Transactional
-  public CadastroPostResponse cadastrarPost(UUID usuarioID, PostDto postDto) {
+  public CadastroPostResponse cadastrarPost(UUID usuarioID, CadastrarPostRequest request) {
     Usuario usuario = usuarioRepo.findById(usuarioID)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_USUARIO_NAO_ENCONTRADO));
-    Post novoPost = new Post(postDto, usuario);
+
+    if (request.tipo() == Tipo.DEVOLVIDO) {
+      throw new AcheieException(MensagensErro.MSG_ATUALIZAR_TIPO_POST_INVALIDO);
+    }
+
+    Post novoPost = new Post(request, usuario);
     postRepo.save(novoPost);
 
-    UUID itemId = itemServico.cadastrarItem(postDto.item(), novoPost.getId());
+    UUID itemId = itemServico.cadastrarItem(request.item(), novoPost.getId());
     Item item = itemRepo.findById(itemId)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_ITEM_NAO_ENCONTRADO));
     novoPost.setItem(item);
@@ -88,15 +94,16 @@ public class PostServico {
         .map(PostDto::new).toList();
   }
 
-  public Atualizacao atualizarPost(UUID postId, PostDto postDto) {
+  public Atualizacao atualizarPost(UUID postId, CadastrarPostRequest request) {
     Post post = postRepo.findById(postId)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_POST_NAO_ENCONTRADO));
 
-    post.setTipo(postDto.tipo());
-    post.setCriacaoDoPost(postDto.dataCriacao());
-    post.setRemocaoDoPost(postDto.dataRemocao());
-    this.usuarioServico.atualizarUsuario(post.getUsuario().getId(), postDto.usuario());
-    this.itemServico.atualizarItem(post.getItem().getId(), postDto.item());
+    if (request.tipo() == Tipo.DEVOLVIDO) {
+      throw new AcheieException(MensagensErro.MSG_ATUALIZAR_TIPO_POST_INVALIDO);
+    }
+
+    post.setTipo(request.tipo());
+    this.itemServico.atualizarItem(post.getItem().getId(), request.item());
 
     return Atualizacao.ATUALIZACAO_COM_SUCESSO;
   }
@@ -140,6 +147,8 @@ public class PostServico {
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_USUARIO_NAO_ENCONTRADO));
     Post postParaEncerrar = postRepo.findById(request.idPost())
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_POST_NAO_ENCONTRADO));
+    Item itemParaEncerrar = itemRepo.findById(postParaEncerrar.getItem().getId())
+        .orElseThrow(() -> new AcheieException(MensagensErro.MSG_ITEM_NAO_ENCONTRADO));
 
     if (!postParaEncerrar.getUsuario().getId().equals(request.idUsuario())) {
       throw new AcheieException(MensagensErro.MSG_ENCERRAR_POST_INVALIDO);
@@ -148,6 +157,9 @@ public class PostServico {
     postParaEncerrar.setTipo(Tipo.DEVOLVIDO);
     postParaEncerrar.setDevolucaoItem(LocalDate.now());
     this.postRepo.save(postParaEncerrar);
+
+    itemParaEncerrar.setEstado(Estado.DEVOLVIDO);
+    this.itemRepo.save(itemParaEncerrar);
 
     return new EncerrarProcuraResponse(postParaEncerrar.getUsuario().getId(),
         postParaEncerrar.getId(), postParaEncerrar.getDevolucaoItem());
