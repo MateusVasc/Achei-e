@@ -1,5 +1,7 @@
 package com.upe.br.acheie.servico;
 
+import com.upe.br.acheie.dominio.utils.enums.Estado;
+import com.upe.br.acheie.dominio.utils.enums.Tipo;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,12 @@ public class ItemServico {
   public UUID cadastrarItem(ItemDto itemDto, UUID postId) {
     Post post = postRepo.findById(postId)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_POST_NAO_ENCONTRADO));
-    Item item = new Item(itemDto, post);
 
+    if (itemDto.estado() == Estado.DEVOLVIDO) {
+      throw new AcheieException(MensagensErro.MSG_ATUALIZAR_ESTADO_ITEM_INVALIDO);
+    }
+
+    Item item = new Item(itemDto, post);
     itemRepo.save(item);
 
     return item.getId();
@@ -39,6 +45,10 @@ public class ItemServico {
   public Atualizacao atualizarItem(UUID idItem, ItemDto itemDto) {
     Item item = this.itemRepo.findById(idItem)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_ITEM_NAO_ENCONTRADO));
+
+    if (itemDto.estado() == Estado.DEVOLVIDO) {
+      throw new AcheieException(MensagensErro.MSG_ATUALIZAR_ESTADO_ITEM_INVALIDO);
+    }
 
     item.setCategoria(itemDto.categoria());
     item.setData(itemDto.data());
