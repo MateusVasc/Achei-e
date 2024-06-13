@@ -29,6 +29,8 @@ public class MensagensErro {
 	public static final String MSG_INFO_CADASTRO_INVALIDAS = "Informações de cadastro inválidas";
 	public static final String MSG_EMAIL_CADASTRADO = "Este email já está cadastrado";
 	public static final String MSG_EMAIL_INVALIDO = "Informe um email válido";
+	public static final String MSG_ATUALIZAR_TIPO_POST_INVALIDO = "Não é permitido atualizar o tipo do post para DEVOLVIDO neste endpoint";
+	public static final String MSG_ATUALIZAR_ESTADO_ITEM_INVALIDO = "Não é permitido atualizar o estado do item para DEVOLVIDO neste endpoint";
 
 	private MensagensErro() {}
 	}

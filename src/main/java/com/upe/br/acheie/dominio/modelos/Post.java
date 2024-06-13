@@ -1,6 +1,7 @@
 package com.upe.br.acheie.dominio.modelos;
 
 
+import com.upe.br.acheie.dominio.dto.request.CadastrarPostRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -72,6 +73,16 @@ public class Post {
 	this.usuario = usuario;
 	this.item = null;
 	this.comentarios = null;
+  }
+
+  public Post(CadastrarPostRequest request, Usuario usuario) {
+    this.tipo = request.tipo();
+    this.criacaoDoPost = LocalDate.now();
+    this.remocaoDoPost = null;
+    this.devolucaoItem = null;
+    this.usuario = usuario;
+    this.item = null;
+    this.comentarios = null;
   }
   
 }

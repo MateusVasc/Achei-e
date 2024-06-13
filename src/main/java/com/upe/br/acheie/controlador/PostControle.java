@@ -1,6 +1,7 @@
 package com.upe.br.acheie.controlador;
 
 import com.upe.br.acheie.dominio.dto.request.BuscaPorTextoRequest;
+import com.upe.br.acheie.dominio.dto.request.CadastrarPostRequest;
 import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
 import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
 import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
@@ -49,9 +50,9 @@ public class PostControle {
 
   @PostMapping("/novo-post/{usuarioId}")
   public ResponseEntity<CadastroPostResponse> cadastrarPost(@PathVariable UUID usuarioId,
-      @RequestBody PostDto postDto) {
+      @RequestBody CadastrarPostRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(this.postServico.cadastrarPost(usuarioId, postDto));
+        .body(this.postServico.cadastrarPost(usuarioId, request));
   }
 
   @GetMapping("/post/{id}")
@@ -80,9 +81,9 @@ public class PostControle {
 
   @PutMapping("/post")
   public ResponseEntity<Atualizacao> atualizarPost(@RequestParam(value = "postId") UUID postId,
-      @RequestBody PostDto postDto) {
+      @RequestBody CadastrarPostRequest request) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(this.postServico.atualizarPost(postId, postDto));
+        .body(this.postServico.atualizarPost(postId, request));
   }
 
   @GetMapping("/posts-tipo") // tem que validar os dados que são passados para o filtro
