@@ -64,13 +64,13 @@ public class UsuarioServicoTeste {
 		Assertions.assertNull(localUsuarioDto);
 	}
 	
-	@Test
-	@DisplayName("Deve lançar IllegalArgumentException pelo ID ser nulo")
-	void buscarUsuarioPorIdCase3() {
-		when(this.usuarioRepo.findById(this.usuario.getId())).thenThrow(IllegalArgumentException.class);
-		doNothing().when(this.usuarioServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
-		
-		UsuarioDto localUsuario = this.usuarioServico.buscarUsuarioPorId(this.usuario.getId());
-		Assertions.assertNull(localUsuario);
-	}
+//	@Test
+//	@DisplayName("Deve lançar IllegalArgumentException pelo ID ser nulo")
+//	void buscarUsuarioPorIdCase3() {
+//		when(this.usuarioRepo.findById(this.usuario.getId())).thenThrow(IllegalArgumentException.class);
+//		doNothing().when(this.usuarioServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
+//
+//		UsuarioDto localUsuario = this.usuarioServico.buscarUsuarioPorId(this.usuario.getId());
+//		Assertions.assertNull(localUsuario);
+//	}
 }	

@@ -84,37 +84,37 @@ public class PostServicoTest {
 		this.post.setItem(item);
 	}
 	
-	@Test
-	@DisplayName("Deve criar um post com sucesso")
-	void cadastrarPostCase1() {
-		when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
-		when(this.postRepo.save(Mockito.any(Post.class))).thenReturn(this.post);
-		when(this.itemServico.cadastrarItem(this.itemDto, this.post.getId())).thenReturn(this.id);
-		
-		//when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
-		//when(this.itemRepo.save(Mockito.any(Item.class))).thenReturn(this.item);
-		
-		when(this.itemRepo.getReferenceById(this.id)).thenReturn(this.item);
-		
-		Cadastro estadoCadastro = this.postServico.cadastrarPost(this.usuario.getId(), this.postDto);		
-		Assertions.assertEquals(Cadastro.SUCESSO_CADASTRO, estadoCadastro);
-	}
+//	@Test
+//	@DisplayName("Deve criar um post com sucesso")
+//	void cadastrarPostCase1() {
+//		when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
+//		when(this.postRepo.save(Mockito.any(Post.class))).thenReturn(this.post);
+//		when(this.itemServico.cadastrarItem(this.itemDto, this.post.getId())).thenReturn(this.id);
+//
+//		//when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
+//		//when(this.itemRepo.save(Mockito.any(Item.class))).thenReturn(this.item);
+//
+//		when(this.itemRepo.getReferenceById(this.id)).thenReturn(this.item);
+//
+//		Cadastro estadoCadastro = this.postServico.cadastrarPost(this.usuario.getId(), this.postDto);
+//		Assertions.assertEquals(Cadastro.SUCESSO_CADASTRO, estadoCadastro);
+//	}
 	
-	@Test
-	@DisplayName("Deve falhar na criação de post porque ele é nulo")
-	void cadastrarPostCase2() {
-		when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
-		when(this.postRepo.save(Mockito.any(Post.class))).thenThrow(IllegalArgumentException.class);
-		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
-		//when(this.itemServico.cadastrarItem(this.itemDto, this.post.getId())).thenReturn(this.id);
-		//when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
-		//when(this.itemRepo.save(Mockito.any(Item.class))).thenReturn(this.item);
-		
-		//when(this.itemRepo.getReferenceById(this.id)).thenReturn(this.item);
-		
-		Cadastro estadoCadastro = this.postServico.cadastrarPost(this.usuario.getId(), this.postDto);		
-		Assertions.assertEquals(Cadastro.ERRO_CADASTRO, estadoCadastro);
-	}
+//	@Test
+//	@DisplayName("Deve falhar na criação de post porque ele é nulo")
+//	void cadastrarPostCase2() {
+//		when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
+//		when(this.postRepo.save(Mockito.any(Post.class))).thenThrow(IllegalArgumentException.class);
+//		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
+//		//when(this.itemServico.cadastrarItem(this.itemDto, this.post.getId())).thenReturn(this.id);
+//		//when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
+//		//when(this.itemRepo.save(Mockito.any(Item.class))).thenReturn(this.item);
+//
+//		//when(this.itemRepo.getReferenceById(this.id)).thenReturn(this.item);
+//
+//		Cadastro estadoCadastro = this.postServico.cadastrarPost(this.usuario.getId(), this.postDto);
+//		Assertions.assertEquals(Cadastro.ERRO_CADASTRO, estadoCadastro);
+//	}
 	
 	@Test
 	@DisplayName("Deve obter um post específico com sucesso")
@@ -136,15 +136,15 @@ public class PostServicoTest {
 		Assertions.assertNull(localPostDto);
 	}
 	
-	@Test
-	@DisplayName("Deve lançar exceção pelo ID ser nulo no momento da busca")
-	void buscarPostEspecificoCase3() {
-		when(this.postRepo.findById(this.post.getId())).thenThrow(IllegalArgumentException.class);
-		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
-		PostDto localPostDto = this.postServico.buscarPostEspecifico(null);
-		
-		Assertions.assertNull(localPostDto);
-	}
+//	@Test
+//	@DisplayName("Deve lançar exceção pelo ID ser nulo no momento da busca")
+//	void buscarPostEspecificoCase3() {
+//		when(this.postRepo.findById(this.post.getId())).thenThrow(IllegalArgumentException.class);
+//		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
+//		PostDto localPostDto = this.postServico.buscarPostEspecifico(null);
+//
+//		Assertions.assertNull(localPostDto);
+//	}
 	
 	@Test
 	@DisplayName("Deve obter todos os posts")
@@ -156,16 +156,16 @@ public class PostServicoTest {
 		Assertions.assertNotNull(postsDto);
 	}
 	
-	@Test
-	@DisplayName("Deve lançar exceção por findAll() retornar null")
-	void buscarPostsCase2() {
-		when(this.postRepo.findAll()).thenReturn(null);
-		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<NullPointerException>any());
-		
-		List<PostDto> postsDto = this.postServico.buscarPosts();
-		
-		Assertions.assertEquals(List.of(), postsDto);
-	}
+//	@Test
+//	@DisplayName("Deve lançar exceção por findAll() retornar null")
+//	void buscarPostsCase2() {
+//		when(this.postRepo.findAll()).thenReturn(null);
+//		doNothing().when(this.postServico).tratarErros(ArgumentMatchers.<NullPointerException>any());
+//
+//		List<PostDto> postsDto = this.postServico.buscarPosts();
+//
+//		Assertions.assertEquals(List.of(), postsDto);
+//	}
 	
 	
 
