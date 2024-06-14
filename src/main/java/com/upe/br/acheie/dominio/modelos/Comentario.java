@@ -56,4 +56,12 @@ public class Comentario {
 	  this.usuario = usuario;
 	  this.post = post;
   }
+
+  public Comentario(String assunto, Post post, Usuario usuario) {
+    this.assunto = assunto;
+    this.criacaoDoComentario = LocalDate.now();
+    this.remocaoDoComentario = null;
+    this.usuario = usuario;
+    this.post = post;
+  }
 }

@@ -1,6 +1,7 @@
 package com.upe.br.acheie.controlador;
 
 import com.upe.br.acheie.dominio.dto.request.BuscaPorTextoRequest;
+import com.upe.br.acheie.dominio.dto.request.CadastrarComentarioRequest;
 import com.upe.br.acheie.dominio.dto.request.CadastrarPostRequest;
 import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
 import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
@@ -74,9 +75,9 @@ public class PostControle {
 
   @PostMapping("/post/{postId}")
   public ResponseEntity<Cadastro> cadastrarComentario(@PathVariable UUID postId,
-      @RequestParam("usuarioId") UUID usuarioId, @RequestBody ComentarioDto comentario) {
+      @RequestParam("usuarioId") UUID usuarioId, @RequestBody CadastrarComentarioRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(this.comentarioServico.cadastrarComentario(postId, usuarioId, comentario));
+        .body(this.comentarioServico.cadastrarComentario(postId, usuarioId, request));
   }
 
   @PutMapping("/post")
