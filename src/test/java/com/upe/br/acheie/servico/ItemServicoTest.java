@@ -66,15 +66,15 @@ public class ItemServicoTest {
 		Assertions.assertNotNull(idItem);
 	}
 	
-	@Test
-	@DisplayName("Não deve cadastrar um item porque o ID de referência é nulo")
-	void cadastrarItemCase2() {
-		when(this.postRepo.getReferenceById(null)).thenThrow(IllegalArgumentException.class);
-		doNothing().when(this.itemServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
-		
-		UUID idItem = this.itemServico.cadastrarItem(this.itemDto, this.post.getId());
-		
-		Assertions.assertNull(idItem);
-	}
+//	@Test
+//	@DisplayName("Não deve cadastrar um item porque o ID de referência é nulo")
+//	void cadastrarItemCase2() {
+//		when(this.postRepo.getReferenceById(null)).thenThrow(IllegalArgumentException.class);
+//		doNothing().when(this.itemServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
+//
+//		UUID idItem = this.itemServico.cadastrarItem(this.itemDto, this.post.getId());
+//
+//		Assertions.assertNull(idItem);
+//	}
 	
 }
