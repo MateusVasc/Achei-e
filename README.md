@@ -129,6 +129,49 @@ nomes das variáveis e seus valores
 > }
 > ```
 
+### `PUT` Editar usuário
+
+> ```
+> /achei-e/usuario
+> ```
+>
+> Exemplo de utilização
+>
+> _@RequestParam_
+>
+> ```
+> postId: e3a3c332-18b3-4747-abe3-45a28a51a631
+> ```
+> _@RequestBody_
+>
+> ```
+> {
+>    "tipo": "PERDIDO", 
+>    "item": {
+>        "estado": "ENCONTRADO", 
+>        "categoria": "ELETRONICO", 
+>        "descricao": "apple watch rosa perdido no lab 2",
+>        "titulo": "apple watch rosa",
+>        "data": "2024-05-31",
+>        "foto": ""
+>    }
+> }
+> ```
+
+### `GET` Buscar usuário por id
+
+> ```
+> /achei-e/usuario/{id}
+> ```
+>
+> Exemplo de utilização
+>
+> _@PathVariable_
+>
+> ```
+> /achei-e/usuario/e3a3c332-18b3-4747-abe3-45a28a51a631
+> ```
+
 ### `POST` Criar novo post
 
 > ```
@@ -146,17 +189,7 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "tipo": "PERDIDO", 
->    "dataCriacao": "2024-05-31", 
->    "dataRemocao": "", 
->    "usuario": {
->        "nome": "Mateus",
->        "sobrenome": "Araujo",
->        "curso": "ENGENHARIA_DE_SOFTWARE",
->        "periodo": "QUINTO",
->        "telefone": "12345678",
->        "foto": ""
->    }, 
+>    "tipo": "PERDIDO",
 >    "item": {
 >        "estado": "PERDIDO", 
 >        "categoria": "ELETRONICO", 
@@ -164,8 +197,7 @@ nomes das variáveis e seus valores
 >        "titulo": "colchão",
 >        "data": "2024-05-31",
 >        "foto": ""
->    }, 
->    "comentarios": []
+>    }
 > }
 > ```
 
@@ -179,6 +211,20 @@ nomes das variáveis e seus valores
 >
 > ```
 > /achei-e/posts
+> ```
+
+### `GET` Buscar post por id
+
+> ```
+> /achei-e/post/{id}
+> ```
+>
+> Exemplo de utilização
+>
+> _@PathVariable_
+>
+> ```
+> /achei-e/post/e3a3c332-18b3-4747-abe3-45a28a51a631
 > ```
 
 ### `PUT` Editar post
@@ -198,17 +244,7 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "tipo": "PERDIDO", 
->    "dataCriacao": "2024-05-31", 
->    "dataRemocao": "", 
->    "usuario": {
->        "nome": "Mateus",
->        "sobrenome": "Araujo",
->        "curso": "ENGENHARIA_DE_SOFTWARE",
->        "periodo": "QUINTO",
->        "telefone": "12345678",
->        "foto": ""
->    }, 
+>    "tipo": "PERDIDO",
 >    "item": {
 >        "estado": "PERDIDO", 
 >        "categoria": "ELETRONICO", 
@@ -216,8 +252,7 @@ nomes das variáveis e seus valores
 >        "titulo": "colchão",
 >        "data": "2024-05-31",
 >        "foto": ""
->    }, 
->    "comentarios": []
+>    }
 > }
 > ```
 
@@ -240,10 +275,10 @@ nomes das variáveis e seus valores
 > idUsuario: j3b3c332-18b3-4747-abe3-45a28a51a631
 > ```
 
-### `GET` Encontrar usuário
+### `POST` Fazer comentário
 
 > ```
-> /achei-e/usuario/{id}
+> /achei-e/post/{postId}
 > ```
 >
 > Exemplo de utilização
@@ -251,7 +286,36 @@ nomes das variáveis e seus valores
 > _@PathVariable_
 >
 > ```
-> /achei-e/usuario/e3a3c332-18b3-4747-abe3-45a28a51a631
+> /achei-e/post/e3a3c332-18b3-4747-abe3-45a28a51a631
+> ```
+> _@RequestParam_
+>
+> ```
+> usuarioId: e3a3c332-18b3-4747-abe3-45a28a51a631
+> ```
+> _@RequestBody_
+>
+> ```
+> {
+>    "assunto": "perdi meu guarda-chuva na sala tal",
+> }
+> ```
+
+### `PUT` Encerrar procura
+
+> ```
+> /achei-e/post/encerrar-procura
+> ```
+>
+> Exemplo de utilização
+>
+> _@RequestBody_
+>
+> ```
+> {
+>    "idUsuario": "k1b3c332-18b3-4747-abe3-45a28a51a631",
+>    "idPost": "p2b3c332-18b3-4747-abe3-45a28a51a631"
+> }
 > ```
 
 ## Autores
