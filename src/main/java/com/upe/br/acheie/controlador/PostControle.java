@@ -4,6 +4,7 @@ import com.upe.br.acheie.dominio.dto.request.BuscaPorTextoRequest;
 import com.upe.br.acheie.dominio.dto.request.CadastrarComentarioRequest;
 import com.upe.br.acheie.dominio.dto.request.CadastrarPostRequest;
 import com.upe.br.acheie.dominio.dto.request.EncerrarProcuraRequest;
+import com.upe.br.acheie.dominio.dto.response.CadastrarComentarioResponse;
 import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
 import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
 import com.upe.br.acheie.dominio.dto.response.ExcluirComentarioResponse;
@@ -74,7 +75,7 @@ public class PostControle {
   }
 
   @PostMapping("/post/{postId}")
-  public ResponseEntity<Cadastro> cadastrarComentario(@PathVariable UUID postId,
+  public ResponseEntity<CadastrarComentarioResponse> cadastrarComentario(@PathVariable UUID postId,
       @RequestParam("usuarioId") UUID usuarioId, @RequestBody CadastrarComentarioRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(this.comentarioServico.cadastrarComentario(postId, usuarioId, request));
