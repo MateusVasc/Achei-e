@@ -1,6 +1,7 @@
 package com.upe.br.acheie.servico;
 
 import com.upe.br.acheie.dominio.dto.request.CadastrarComentarioRequest;
+import com.upe.br.acheie.dominio.dto.response.CadastrarComentarioResponse;
 import com.upe.br.acheie.dominio.dto.response.ExcluirComentarioResponse;
 import com.upe.br.acheie.repositorio.UsuarioRepositorio;
 import java.time.LocalDate;
@@ -28,15 +29,18 @@ public class ComentarioServico {
 
   private final UsuarioRepositorio usuarioRepo;
 
-  public Cadastro cadastrarComentario(UUID postId, UUID usuarioId, CadastrarComentarioRequest request) {
+  public CadastrarComentarioResponse cadastrarComentario(UUID postId, UUID usuarioId,
+      CadastrarComentarioRequest request) {
     Post post = postRepo.findById(postId)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_POST_NAO_ENCONTRADO));
     Usuario usuario = usuarioRepo.findById(usuarioId)
         .orElseThrow(() -> new AcheieException(MensagensErro.MSG_USUARIO_NAO_ENCONTRADO));
 
-    comentarioRepo.save(new Comentario(request.assunto(), post, usuario));
+    Comentario comentario = new Comentario(request.assunto(), post, usuario);
+    comentarioRepo.save(comentario);
 
-    return Cadastro.SUCESSO_CADASTRO;
+    return new CadastrarComentarioResponse(comentario.getId(), comentario.getPost().getId(),
+        comentario.getUsuario().getId(), comentario.getCriacaoDoComentario());
   }
 
   public ExcluirComentarioResponse excluirComentarioPorId(UUID idPost, UUID idUsuario,
