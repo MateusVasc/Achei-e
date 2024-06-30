@@ -80,6 +80,10 @@ public class PostServico {
     return postRepo.findAll().stream().map(PostDto::new).toList();
   }
 
+  public List<PostDto> buscarPostsPorIdUsuario(UUID idUsuario) {
+    return postRepo.findByUsuarioId(idUsuario).stream().map(PostDto::new).toList();
+  }
+
   public List<PostDto> buscarPostsPorTexto(String texto, List<String> campos, int limite) {
     List<String> camposDePesquisa = campos.isEmpty() ? CAMPOS_PARA_PESQUISA : campos;
 
