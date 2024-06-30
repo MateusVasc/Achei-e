@@ -31,5 +31,8 @@ public interface PostRepositorio extends PesquisaDeTextoRepositorio<Post, UUID> 
 
 	@Query("SELECT p FROM Post p WHERE p.usuario.id = :usuarioId AND p.id = :postId")
 	Optional<Post> findByUsuarioIdAndPostId(@Param("usuarioId") UUID usuarioId, @Param("postId") UUID postId);
+
+	@Query("SELECT p FROM Post p WHERE p.usuario.id = :usuarioId")
+	List<Post> findByUsuarioId(@Param("usuarioId") UUID usuarioId);
 	
 }

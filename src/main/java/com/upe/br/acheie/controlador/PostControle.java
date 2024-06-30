@@ -67,6 +67,11 @@ public class PostControle {
     return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPosts());
   }
 
+  @GetMapping("/posts/{idUsuario}")
+  public ResponseEntity<List<PostDto>> buscarPostsPorIdUsuario(@PathVariable UUID idUsuario) {
+    return ResponseEntity.status(HttpStatus.OK).body(postServico.buscarPostsPorIdUsuario(idUsuario));
+  }
+
   @GetMapping("/posts/texto")
   public ResponseEntity<List<PostDto>> buscarPostsPorTexto(
       @RequestBody BuscaPorTextoRequest request) {
