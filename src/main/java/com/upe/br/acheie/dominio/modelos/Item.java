@@ -37,11 +37,11 @@ public class Item {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Estado estado; // pra q q serve isso msm?
+  private Estado estado;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Categoria categoria; // pensar quais seriam as categorias (vão ser mtas provavelmente...)
+  private Categoria categoria;
 
   @Column(nullable = false)
   @FullTextField
@@ -55,7 +55,7 @@ public class Item {
   private byte[] foto;
 
   @Column(nullable = false)
-  private LocalDate data; // precisa? o post já tem a data
+  private LocalDate data;
 
   @OneToOne
   @JoinColumn(name = "id_post", nullable = false)

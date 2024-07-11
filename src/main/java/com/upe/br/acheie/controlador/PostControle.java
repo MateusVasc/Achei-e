@@ -9,7 +9,6 @@ import com.upe.br.acheie.dominio.dto.response.CadastroPostResponse;
 import com.upe.br.acheie.dominio.dto.response.EncerrarProcuraResponse;
 import com.upe.br.acheie.dominio.dto.response.ExcluirComentarioResponse;
 import com.upe.br.acheie.dominio.dto.response.ExcluirPostResponse;
-import com.upe.br.acheie.dominio.utils.enums.Cadastro;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.upe.br.acheie.dominio.dto.ComentarioDto;
 import com.upe.br.acheie.dominio.dto.ErroDto;
 import com.upe.br.acheie.dominio.dto.PostDto;
 import com.upe.br.acheie.dominio.utils.enums.Atualizacao;
