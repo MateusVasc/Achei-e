@@ -36,12 +36,12 @@ public class UsuarioServicoTeste {
 	Usuario usuario;
 	UsuarioDto usuarioDto;
 	
-	@BeforeEach
-	void init() {
-		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, 
-				"8199540337", null);
-		usuario = new Usuario(usuarioDto);
-	}
+//	@BeforeEach
+//	void init() {
+//		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO,
+//				"8199540337", null);
+//		usuario = new Usuario(usuarioDto);
+//	}
 	
 	@Test
 	@DisplayName("Deve retornar os dados de um usuário pelo seu ID")

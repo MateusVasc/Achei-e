@@ -68,21 +68,21 @@ public class PostServicoTest {
 	UUID id;
 	Item item;
 	
-	@BeforeEach
-	void init() {
-		itemDto = new ItemDto(Estado.PERDIDO, Categoria.ELETRONICO, "Fone de ouvido rosa perdido no LAB1", "Fone de ouvido perdido", LocalDate.now(), null);
-		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, "8199540337", null);
-		usuario = new Usuario(usuarioDto);
-		post = new Post();
-		postDto = new PostDto(Tipo.PERDIDO, LocalDate.now(), null, this.usuarioDto, this.itemDto, null);
-		item = new Item(this.itemDto, this.post);
-		//comentarioDto = new ComentarioDto("Essa chave é minha!", usuarioDto, LocalDate.now(), null);
-		//comentario = new Comentario(comentarioDto, post, usuario);
-		id = UUID.randomUUID();
-		this.post.setComentarios(new ArrayList<Comentario>());
-		this.post.setUsuario(usuario);
-		this.post.setItem(item);
-	}
+//	@BeforeEach
+//	void init() {
+//		itemDto = new ItemDto(Estado.PERDIDO, Categoria.ELETRONICO, "Fone de ouvido rosa perdido no LAB1", "Fone de ouvido perdido", LocalDate.now(), null);
+//		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO, "8199540337", null);
+//		usuario = new Usuario(usuarioDto);
+//		post = new Post();
+//		postDto = new PostDto(Tipo.PERDIDO, LocalDate.now(), null, this.usuarioDto, this.itemDto, null);
+//		item = new Item(this.itemDto, this.post);
+//		//comentarioDto = new ComentarioDto("Essa chave é minha!", usuarioDto, LocalDate.now(), null);
+//		//comentario = new Comentario(comentarioDto, post, usuario);
+//		id = UUID.randomUUID();
+//		this.post.setComentarios(new ArrayList<Comentario>());
+//		this.post.setUsuario(usuario);
+//		this.post.setItem(item);
+//	}
 	
 //	@Test
 //	@DisplayName("Deve criar um post com sucesso")
