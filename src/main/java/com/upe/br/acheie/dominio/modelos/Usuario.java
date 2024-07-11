@@ -103,6 +103,7 @@ public class Usuario implements UserDetails {
   }
   
   public Usuario(UsuarioDto usuarioDto) {
+    this.id = usuarioDto.idUsuario();
 	  this.nome = usuarioDto.nome();
 	  this.sobrenome = usuarioDto.sobrenome();
 	  this.curso = usuarioDto.curso();

@@ -66,6 +66,7 @@ public class Post {
   private List<Comentario> comentarios;
   
   public Post(PostDto postDto, Usuario usuario) {
+    this.id = postDto.idPost();
 	this.tipo = postDto.tipo();
 	this.criacaoDoPost = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
 	this.remocaoDoPost = postDto.dataRemocao();

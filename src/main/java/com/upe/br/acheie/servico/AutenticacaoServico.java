@@ -115,7 +115,7 @@ public class AutenticacaoServico {
       return false;
     }
 
-    String telefoneRegex = "^\\d{10}$";
+    String telefoneRegex = "^\\d{11}$";
     Pattern pattern = Pattern.compile(telefoneRegex);
     Matcher matcher = pattern.matcher(telefone);
 
