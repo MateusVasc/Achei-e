@@ -1,13 +1,13 @@
 package com.upe.br.acheie.domain.model;
 
 
-import com.upe.br.acheie.domain.dto.request.CadastrarPostRequest;
+import com.upe.br.acheie.domain.dto.request.RegisterPostRequest;
+import com.upe.br.acheie.domain.enums.Type;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import com.upe.br.acheie.domain.dto.PostDto;
-import com.upe.br.acheie.domain.enums.Tipo;
 
 
 import jakarta.persistence.CascadeType;
@@ -43,47 +43,47 @@ public class Post {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Tipo tipo;
+  private Type type;
 
   @Column(name = "criacao_do_post", nullable = false)
-  private LocalDate criacaoDoPost;
+  private LocalDate createdAt;
 
   @Column(name = "remocao_do_post")
-  private LocalDate remocaoDoPost;
+  private LocalDate removedAt;
 
   @Column(name = "devolucao_do_item")
-  private LocalDate devolucaoItem;
+  private LocalDate returnedAt;
 
   @ManyToOne
   @JoinColumn(name = "id_usuario", nullable = false)
-  private Usuario usuario;
+  private User user;
 
   @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
   @IndexedEmbedded(includePaths = {"titulo", "descricao"})
   private Item item;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Comentario> comentarios;
+  private List<Comment> comments;
   
-  public Post(PostDto postDto, Usuario usuario) {
+  public Post(PostDto postDto, User user) {
     this.id = postDto.idPost();
-	this.tipo = postDto.tipo();
-	this.criacaoDoPost = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
-	this.remocaoDoPost = postDto.dataRemocao();
-	this.devolucaoItem = null;
-	this.usuario = usuario;
+	this.type = postDto.type();
+	this.createdAt = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
+	this.removedAt = postDto.dataRemocao();
+	this.returnedAt = null;
+	this.user = user;
 	this.item = null;
-	this.comentarios = null;
+	this.comments = null;
   }
 
-  public Post(CadastrarPostRequest request, Usuario usuario) {
-    this.tipo = request.tipo();
-    this.criacaoDoPost = LocalDate.now();
-    this.remocaoDoPost = null;
-    this.devolucaoItem = null;
-    this.usuario = usuario;
+  public Post(RegisterPostRequest request, User user) {
+    this.type = request.type();
+    this.createdAt = LocalDate.now();
+    this.removedAt = null;
+    this.returnedAt = null;
+    this.user = user;
     this.item = null;
-    this.comentarios = null;
+    this.comments = null;
   }
   
 }

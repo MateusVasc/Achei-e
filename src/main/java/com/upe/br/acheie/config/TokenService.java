@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.upe.br.acheie.domain.model.Usuario;
+import com.upe.br.acheie.domain.model.User;
 import com.upe.br.acheie.domain.exceptions.AcheieException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,13 +16,13 @@ public class TokenService {
 
   private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
-  public String gerarToken(Usuario usuario) throws AcheieException {
+  public String gerarToken(User user) throws AcheieException {
     try {
       Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
       return JWT.create()
           .withIssuer("acheie-api")
-          .withSubject(usuario.getEmail())
+          .withSubject(user.getEmail())
           .withExpiresAt(gerarDataDeExpiracao())
           .sign(algorithm);
 

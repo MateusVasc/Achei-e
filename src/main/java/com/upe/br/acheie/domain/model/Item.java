@@ -1,11 +1,11 @@
 package com.upe.br.acheie.domain.model;
 
+import com.upe.br.acheie.domain.enums.Category;
 import java.time.LocalDate;
 import java.util.UUID;
 
 import com.upe.br.acheie.domain.dto.ItemDto;
-import com.upe.br.acheie.domain.enums.Categoria;
-import com.upe.br.acheie.domain.enums.Estado;
+import com.upe.br.acheie.domain.enums.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,37 +37,37 @@ public class Item {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Estado estado;
+  private Status status;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Categoria categoria;
+  private Category category;
 
   @Column(nullable = false)
   @FullTextField
-  private String descricao;
+  private String description;
 
   @Column(nullable = false)
   @FullTextField
-  private String titulo;
+  private String title;
 
   @Column(nullable = false)
-  private byte[] foto;
+  private byte[] photo;
 
   @Column(nullable = false)
-  private LocalDate data;
+  private LocalDate lostAt;
 
   @OneToOne
   @JoinColumn(name = "id_post", nullable = false)
   private Post post;
   
   public Item(ItemDto itemDto, Post post) {
-	  this.estado = itemDto.estado();
-	  this.categoria = itemDto.categoria();
-	  this.descricao = itemDto.descricao();
-	  this.titulo = itemDto.titulo();
-	  this.foto = itemDto.foto();
-	  this.data = itemDto.data();
+	  this.status = itemDto.status();
+	  this.category = itemDto.category();
+	  this.description = itemDto.descricao();
+	  this.title = itemDto.titulo();
+	  this.photo = itemDto.foto();
+	  this.lostAt = itemDto.data();
 	  this.post = post;
   }
 }

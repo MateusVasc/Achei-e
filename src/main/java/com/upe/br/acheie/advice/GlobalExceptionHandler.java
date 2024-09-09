@@ -1,6 +1,6 @@
 package com.upe.br.acheie.advice;
 
-import com.upe.br.acheie.domain.dto.ErroDto;
+import com.upe.br.acheie.domain.dto.ErrorDto;
 import com.upe.br.acheie.domain.exceptions.AcheieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +15,15 @@ public class GlobalExceptionHandler {
   private static final Logger log = LogManager.getLogger(GlobalExceptionHandler.class);
 
   @ExceptionHandler(AcheieException.class)
-  public ResponseEntity<ErroDto> manipulaAcheiException(AcheieException e) {
+  public ResponseEntity<ErrorDto> manipulaAcheiException(AcheieException e) {
     log.error(e.getMessage(), e);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroDto(e));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e));
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErroDto> manipulaException(Exception e) {
+  public ResponseEntity<ErrorDto> manipulaException(Exception e) {
     log.error(e.getMessage(), e);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroDto(e));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e));
   }
 
 }

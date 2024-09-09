@@ -1,19 +1,19 @@
 package com.upe.br.acheie.domain.dto;
 
+import com.upe.br.acheie.domain.enums.Type;
 import java.time.LocalDate;
 import java.util.List;
 
 import com.upe.br.acheie.domain.model.Post;
-import com.upe.br.acheie.domain.enums.Tipo;
 import java.util.UUID;
 
-public record PostDto(UUID idPost, Tipo tipo, LocalDate dataCriacao, LocalDate dataRemocao,
-                      UsuarioDto usuario, ItemDto item, List<ComentarioDto> comentarios) {
+public record PostDto(UUID idPost, Type type, LocalDate dataCriacao, LocalDate dataRemocao,
+											UserDto usuario, ItemDto item, List<CommentDto> comentarios) {
 
 	public PostDto(Post post) {
-		this(post.getId(), post.getTipo(), post.getCriacaoDoPost(), post.getRemocaoDoPost(),
-				new UsuarioDto(post.getUsuario()), new ItemDto(post.getItem()),
-				post.getComentarios().stream().map(ComentarioDto::new).toList());
+		this(post.getId(), post.getType(), post.getCreatedAt(), post.getRemovedAt(),
+				new UserDto(post.getUser()), new ItemDto(post.getItem()),
+				post.getComments().stream().map(CommentDto::new).toList());
 	}
 
 }
