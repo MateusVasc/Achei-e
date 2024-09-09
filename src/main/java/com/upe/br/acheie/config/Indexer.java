@@ -1,6 +1,6 @@
 package com.upe.br.acheie.config;
 
-import com.upe.br.acheie.dominio.utils.AcheieException;
+import com.upe.br.acheie.domain.exceptions.AcheieException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;

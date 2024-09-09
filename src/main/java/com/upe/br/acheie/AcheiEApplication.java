@@ -1,7 +1,7 @@
 package com.upe.br.acheie;
 
 import com.upe.br.acheie.config.Indexer;
-import com.upe.br.acheie.repositorio.PesquisaDeTextoRepositorioImpl;
+import com.upe.br.acheie.repository.PesquisaDeTextoRepositorioImpl;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;

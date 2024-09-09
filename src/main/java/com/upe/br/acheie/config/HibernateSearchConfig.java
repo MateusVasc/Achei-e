@@ -1,6 +1,6 @@
 package com.upe.br.acheie.config;
 
-import com.upe.br.acheie.servico.HibernateSearchServico;
+import com.upe.br.acheie.service.HibernateSearchServico;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
