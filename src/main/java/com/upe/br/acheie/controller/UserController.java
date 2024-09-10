@@ -26,27 +26,27 @@ public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/usuario/{id}")
-  public ResponseEntity<UserDto> buscarUsuarioPorId(@PathVariable UUID id) {
-    return ResponseEntity.status(HttpStatus.OK).body(userService.buscarUsuarioPorId(id));
+  @GetMapping("/user/{id}")
+  public ResponseEntity<UserDto> searchById(@PathVariable UUID id) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.searchUserById(id));
   }
 
-  @PutMapping("/usuario")
-  public ResponseEntity<UtilMessage> atualizarUsuario(
-      @RequestParam(value = "usuarioId") UUID idUsuario, @RequestBody UserDto userDto) {
+  @PutMapping("/user")
+  public ResponseEntity<UtilMessage> updateUser(
+      @RequestParam(value = "userId") UUID userId, @RequestBody UserDto userDto) {
     return ResponseEntity.status(HttpStatus.OK).body(new UtilMessage(
-        this.userService.atualizarUsuario(idUsuario, userDto).getMensagem()));
+        this.userService.updateUser(userId, userDto).getMensagem()));
   }
 
-  @PutMapping("/usuario/nova-senha")
-  public ResponseEntity<UtilMessage> requisitarMudarSenha(@RequestBody EmailDto emailDto) {
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(new UtilMessage(this.userService.requisitarMudarSenha(emailDto.email())));
-    }
-
-    @PutMapping("usuario/redefinir-senha")
-    public ResponseEntity<UtilMessage> atualizarSenha (@RequestBody LoginRequest login){
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(new UtilMessage(this.userService.atualizarSenha(login).getMensagem()));
-    }
+  @PutMapping("/user/new-password")
+  public ResponseEntity<UtilMessage> requestChangePassword(@RequestBody EmailDto emailDto) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new UtilMessage(this.userService.requestChangePassword(emailDto.email())));
   }
+
+  @PutMapping("user/update-password")
+  public ResponseEntity<UtilMessage> updatePassword(@RequestBody LoginRequest login){
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new UtilMessage(this.userService.updatePassword(login).getMensagem()));
+  }
+}

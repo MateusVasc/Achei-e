@@ -48,97 +48,97 @@ public class PostController {
 
   private static final Logger log = LogManager.getLogger(PostController.class);
 
-  @PostMapping("/novo-post/{usuarioId}")
-  public ResponseEntity<RegisterPostResponse> cadastrarPost(@PathVariable UUID usuarioId,
+  @PostMapping("/new-post/{userId}")
+  public ResponseEntity<RegisterPostResponse> createPost(@PathVariable UUID userId,
       @RequestBody RegisterPostRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(this.postService.cadastrarPost(usuarioId, request));
+        .body(this.postService.registerPost(userId, request));
   }
 
   @GetMapping("/post/{id}")
-  public ResponseEntity<PostDto> buscarPostPorId(@PathVariable UUID id) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.buscarPostEspecifico(id));
+  public ResponseEntity<PostDto> searchById(@PathVariable UUID id) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostById(id));
   }
 
   @GetMapping("/posts")
-  public ResponseEntity<List<PostDto>> buscarPosts() {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.buscarPosts());
+  public ResponseEntity<List<PostDto>> searchAll() {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchAllPosts());
   }
 
-  @GetMapping("/posts/{idUsuario}")
-  public ResponseEntity<List<PostDto>> buscarPostsPorIdUsuario(@PathVariable UUID idUsuario) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.buscarPostsPorIdUsuario(idUsuario));
+  @GetMapping("/posts/{userId}")
+  public ResponseEntity<List<PostDto>> searchByUserId(@PathVariable UUID userId) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostsByUserId(userId));
   }
 
-  @GetMapping("/posts/texto")
-  public ResponseEntity<List<PostDto>> buscarPostsPorTexto(
+  @GetMapping("/posts/text")
+  public ResponseEntity<List<PostDto>> searchByText(
       @RequestBody TextSearchRequest request) {
     return ResponseEntity.ok(
-        this.postService.buscarPostsPorTexto(request.texto(), request.campos(), request.limite()));
+        this.postService.searchPostsByText(request.text(), request.fields(), request.limit()));
   }
 
   @PostMapping("/post/{postId}")
-  public ResponseEntity<RegisterCommentResponse> cadastrarComentario(@PathVariable UUID postId,
-      @RequestParam("usuarioId") UUID usuarioId, @RequestBody RegisterCommentRequest request) {
+  public ResponseEntity<RegisterCommentResponse> makeComment(@PathVariable UUID postId,
+      @RequestParam("userId") UUID userId, @RequestBody RegisterCommentRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(this.commentService.cadastrarComentario(postId, usuarioId, request));
+        .body(this.commentService.registerComment(postId, userId, request));
   }
 
   @PutMapping("/post")
-  public ResponseEntity<Atualizacao> atualizarPost(@RequestParam(value = "postId") UUID postId,
+  public ResponseEntity<Atualizacao> updatePost(@RequestParam(value = "postId") UUID postId,
       @RequestBody RegisterPostRequest request) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(this.postService.atualizarPost(postId, request));
+        .body(this.postService.updatePost(postId, request));
   }
 
-  @GetMapping("/posts-tipo") // tem que validar os dados que são passados para o filtro
-  public ResponseEntity<List<PostDto>> filtrarPostsPorTipo(
-      @RequestParam(value = "tipo", required = true) Type type) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.filtrarPostsPorTipo(type));
+  @GetMapping("/posts-type") // tem que validar os dados que são passados para o filtro
+  public ResponseEntity<List<PostDto>> searchByType(
+      @RequestParam(value = "type", required = true) Type type) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostsByType(type));
   }
 
 
-  @GetMapping("/posts-categoria")
-  public ResponseEntity<List<PostDto>> filtrarPostsPorCategoria(
-      @RequestParam(value = "categoria", required = true) Category category) {
+  @GetMapping("/posts-category")
+  public ResponseEntity<List<PostDto>> searchByCategory(
+      @RequestParam(value = "category", required = true) Category category) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(postService.filtrarPostsPorCategoria(category));
+        .body(postService.searchPostsByCategory(category));
   }
 
-  @GetMapping("/posts-estado")
-  public ResponseEntity<List<PostDto>> filtrarPostsPorEstado(
-      @RequestParam(value = "estado", required = true) Status status) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.filtrarPostsPorEstado(status));
+  @GetMapping("/posts-status")
+  public ResponseEntity<List<PostDto>> searchByStatus(
+      @RequestParam(value = "status", required = true) Status status) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostsByStatus(status));
   }
 
-  @GetMapping("/posts-data")
-  public ResponseEntity<List<PostDto>> filtrarPostsPorData(
-      @RequestParam(value = "inicio", required = true) LocalDate inicio,
-      @RequestParam(value = "fim") LocalDate fim) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.filtrarPostsPorData(inicio, fim));
+  @GetMapping("/posts-lostDate")
+  public ResponseEntity<List<PostDto>> searchByLostDate(
+      @RequestParam(value = "start", required = true) LocalDate start,
+      @RequestParam(value = "end") LocalDate end) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostsByLostDate(start, end));
   }
 
-  @DeleteMapping("/excluir-post/{idPost}")
-  public ResponseEntity<RemovePostResponse> excluirPostPorId(@PathVariable("idPost") UUID idPost,
-      @RequestParam("idUsuario") UUID idUsuario) {
-    return ResponseEntity.ok(this.postService.excluirPostPorId(idPost, idUsuario));
+  @DeleteMapping("/remove-post/{postId}")
+  public ResponseEntity<RemovePostResponse> removeById(@PathVariable("postId") UUID postId,
+      @RequestParam("userId") UUID userId) {
+    return ResponseEntity.ok(this.postService.removePostById(postId, userId));
   }
 
-  @DeleteMapping("/post/excluir-comentario/{idPost}")
-  public ResponseEntity<RemoveCommentResponse> excluirComentarioPorId(
-      @PathVariable("idPost") UUID idPost,
-      @RequestParam("idUsuario") UUID idUsuario, @RequestParam("idComentario") UUID idComentario) {
+  @DeleteMapping("/post/remove-comment/{postId}")
+  public ResponseEntity<RemoveCommentResponse> removeCommentById(
+      @PathVariable("postId") UUID postId,
+      @RequestParam("userId") UUID userId, @RequestParam("commentId") UUID commentId) {
     return ResponseEntity.ok(
-        this.commentService.excluirComentarioPorId(idPost, idUsuario, idComentario));
+        this.commentService.removeCommentById(postId, userId, commentId));
   }
 
-  @PutMapping("/post/encerrar-procura")
-  public ResponseEntity<CloseSearchResponse> encerrarProcuraDeItem(
+  @PutMapping("/post/close-search")
+  public ResponseEntity<CloseSearchResponse> closeSearch(
       @RequestBody CloseSearchRequest request) {
-    return ResponseEntity.ok(this.postService.encerrarProcuraDeItem(request));
+    return ResponseEntity.ok(this.postService.closeSearch(request));
   }
 
-  public ErrorDto tratarErro(Exception e) {
+  public ErrorDto handleError(Exception e) {
     log.error(e.getMessage(), e);
     return new ErrorDto(e);
   }

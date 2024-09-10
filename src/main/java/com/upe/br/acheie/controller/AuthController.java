@@ -24,13 +24,13 @@ public class AuthController {
     return ResponseEntity.ok(this.authenticationService.loginUsuario(request));
   }
 
-  @PostMapping("/cadastro")
-  public ResponseEntity<Object> cadastro(@RequestBody RegisterRequest request) {
-    return ResponseEntity.ok(this.authenticationService.cadastrarUsuario(request));
+  @PostMapping("/register")
+  public ResponseEntity<Object> register(@RequestBody RegisterRequest request) {
+    return ResponseEntity.ok(this.authenticationService.registerNewUser(request));
   }
 
-  @DeleteMapping("/excluir/{email}")
-  public ResponseEntity<Object> excluirPorEmail(@PathVariable("email") String email) {
-    return ResponseEntity.ok(this.authenticationService.excluirUsuarioPorEmail(email));
+  @DeleteMapping("/remove/{email}")
+  public ResponseEntity<Object> removeByEmail(@PathVariable("email") String email) {
+    return ResponseEntity.ok(this.authenticationService.removeUserByEmail(email));
   }
 }
