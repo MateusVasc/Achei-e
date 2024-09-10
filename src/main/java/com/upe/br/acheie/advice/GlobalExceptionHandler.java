@@ -15,13 +15,13 @@ public class GlobalExceptionHandler {
   private static final Logger log = LogManager.getLogger(GlobalExceptionHandler.class);
 
   @ExceptionHandler(AcheieException.class)
-  public ResponseEntity<ErrorDto> manipulaAcheiException(AcheieException e) {
+  public ResponseEntity<ErrorDto> handleAcheiException(AcheieException e) {
     log.error(e.getMessage(), e);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e));
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorDto> manipulaException(Exception e) {
+  public ResponseEntity<ErrorDto> handleException(Exception e) {
     log.error(e.getMessage(), e);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e));
   }
