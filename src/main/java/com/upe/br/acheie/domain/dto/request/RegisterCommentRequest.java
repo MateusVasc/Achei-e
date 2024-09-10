@@ -1,5 +1,5 @@
 package com.upe.br.acheie.domain.dto.request;
 
-public record RegisterCommentRequest(String assunto) {
+public record RegisterCommentRequest(String subject) {
 
 }

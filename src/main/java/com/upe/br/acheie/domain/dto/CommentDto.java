@@ -2,10 +2,10 @@ package com.upe.br.acheie.domain.dto;
 
 import java.time.LocalDate;
 
-import com.upe.br.acheie.domain.model.Comment;
+import com.upe.br.acheie.domain.entities.Comment;
 
-public record CommentDto(String assunto, UserDto usuario, LocalDate dataCriacao,
-												 LocalDate dataRemocao) {
+public record CommentDto(String subject, UserDto user, LocalDate createdAt,
+												 LocalDate removedAt) {
 
 	public CommentDto(Comment comment) {
 		this(comment.getSubject(), new UserDto(comment.getUser()),
