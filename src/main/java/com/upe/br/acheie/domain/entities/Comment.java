@@ -1,4 +1,4 @@
-package com.upe.br.acheie.domain.model;
+package com.upe.br.acheie.domain.entities;
 
 
 import java.time.LocalDate;
@@ -49,8 +49,8 @@ public class Comment {
   private Post post;
   
   public Comment(CommentDto comentario, Post post, User user) {
-	  this.subject = comentario.assunto();
-	  this.createdAt = comentario.dataCriacao() != null ? comentario.dataCriacao() :
+	  this.subject = comentario.subject();
+	  this.createdAt = comentario.createdAt() != null ? comentario.createdAt() :
 		  LocalDate.now();
 	  this.removedAt = null;
 	  this.user = user;

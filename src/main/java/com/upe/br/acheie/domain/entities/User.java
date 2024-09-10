@@ -1,4 +1,4 @@
-package com.upe.br.acheie.domain.model;
+package com.upe.br.acheie.domain.entities;
 
 
 import com.upe.br.acheie.domain.dto.UserDto;
@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -70,34 +72,34 @@ public class User implements UserDetails {
   @Column(name = "remocao_da_conta")
   private LocalDate removedAt;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Post> posts;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Message> messages;
 
   public User(RegisterRequest request) {
-    this.name = request.nome();
-    this.lastname = request.sobrenome();
+    this.name = request.name();
+    this.lastname = request.lastname();
     this.email = request.email();
-    this.password = request.senha();
+    this.password = request.password();
     this.course = request.course();
     this.semester = request.semester();
-    this.telephone = request.telefone();
-    this.photo = request.foto();
+    this.telephone = request.phone();
+    this.photo = request.photo();
   }
-  
+
   public User(UserDto userDto) {
-    this.id = userDto.idUsuario();
-	  this.name = userDto.nome();
-	  this.lastname = userDto.sobrenome();
-	  this.course = userDto.course();
-	  this.semester = userDto.semester();
-	  this.telephone = userDto.telefone();
-	  this.photo = userDto.foto();
+    this.id = userDto.userId();
+    this.name = userDto.name();
+    this.lastname = userDto.lastname();
+    this.course = userDto.course();
+    this.semester = userDto.semester();
+    this.telephone = userDto.phone();
+    this.photo = userDto.photo();
   }
 
   @Override

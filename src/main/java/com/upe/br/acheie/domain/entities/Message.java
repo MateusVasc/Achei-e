@@ -1,4 +1,4 @@
-package com.upe.br.acheie.domain.model;
+package com.upe.br.acheie.domain.entities;
 
 
 import java.time.LocalDate;

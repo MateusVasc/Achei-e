@@ -1,4 +1,4 @@
-package com.upe.br.acheie.domain.model;
+package com.upe.br.acheie.domain.entities;
 
 import com.upe.br.acheie.domain.enums.Category;
 import java.time.LocalDate;
@@ -64,10 +64,10 @@ public class Item {
   public Item(ItemDto itemDto, Post post) {
 	  this.status = itemDto.status();
 	  this.category = itemDto.category();
-	  this.description = itemDto.descricao();
-	  this.title = itemDto.titulo();
-	  this.photo = itemDto.foto();
-	  this.lostAt = itemDto.data();
+	  this.description = itemDto.description();
+	  this.title = itemDto.title();
+	  this.photo = itemDto.photo();
+	  this.lostAt = itemDto.lostAt();
 	  this.post = post;
   }
 }

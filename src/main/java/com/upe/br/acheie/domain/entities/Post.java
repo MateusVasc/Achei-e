@@ -1,4 +1,4 @@
-package com.upe.br.acheie.domain.model;
+package com.upe.br.acheie.domain.entities;
 
 
 import com.upe.br.acheie.domain.dto.request.RegisterPostRequest;
@@ -59,17 +59,17 @@ public class Post {
   private User user;
 
   @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
-  @IndexedEmbedded(includePaths = {"titulo", "descricao"})
+  @IndexedEmbedded(includePaths = {"title", "description"})
   private Item item;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
   
   public Post(PostDto postDto, User user) {
-    this.id = postDto.idPost();
+    this.id = postDto.postId();
 	this.type = postDto.type();
-	this.createdAt = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
-	this.removedAt = postDto.dataRemocao();
+	this.createdAt = postDto.createdAt() != null ? postDto.createdAt() : LocalDate.now();
+	this.removedAt = postDto.removedAt();
 	this.returnedAt = null;
 	this.user = user;
 	this.item = null;
