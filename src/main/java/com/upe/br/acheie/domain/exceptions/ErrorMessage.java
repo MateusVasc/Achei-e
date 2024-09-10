@@ -4,7 +4,7 @@ public class ErrorMessage {
 
 	public static final String MSG_ID_NULO = "O ID informado é nulo";
 	public static final String MSG_ERRO_INESPERADO =
-			"Ocorreu um erro no processamento de seus dados. Tente novamente!";
+			"Ocorreu um error no processamento de seus dados. Tente novamente!";
 	public static final String MSG_ELEMENTO_AUSENTE = "O elemento informado é nulo";
 	public static final String MSG_ERRO_AUTENTICACAO =
 			"Houve uma falha na autenticação do usuário. Tente novamente!";
@@ -19,7 +19,7 @@ public class ErrorMessage {
 	public static final String MSG_CLAIM_AUSENTE = "Claim a ser verificado não foi informado";
 	public static final String MSG_ERRO_CLAIM = "O claim informado é inválido";
 	public static final String MSG_ENUM_FILTRO = "O valor de filtro informado é inválido";
-	public static final String MSG_ERRO_NOVA_SENHA = "Houve um erro na solicitação de mudança de senha. Tente novamente!";
+	public static final String MSG_ERRO_NOVA_SENHA = "Houve um error na solicitação de mudança de password. Tente novamente!";
 	public static final String MSG_USUARIO_NAO_ENCONTRADO = "Usuário não encontrado";
 	public static final String MSG_ITEM_NAO_ENCONTRADO = "Item não encontrado";
 	public static final String MSG_POST_NAO_ENCONTRADO = "Post não encontrado";

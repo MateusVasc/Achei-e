@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UtilMessage {
 
-  private final String mensagem;
+  private final String message;
 }
