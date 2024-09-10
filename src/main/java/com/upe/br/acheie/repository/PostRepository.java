@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.upe.br.acheie.domain.model.Post;
+import com.upe.br.acheie.domain.entities.Post;
 import com.upe.br.acheie.domain.enums.Status;
 import com.upe.br.acheie.domain.enums.Type;
 

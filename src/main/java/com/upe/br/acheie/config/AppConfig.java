@@ -1,4 +1,4 @@
-package com.upe.br.acheie.infra;
+package com.upe.br.acheie.config;
 
 import com.upe.br.acheie.repository.TextSearchRepositoryImpl;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.upe.br.acheie.service;
 
-import com.upe.br.acheie.domain.model.User;
+import com.upe.br.acheie.domain.entities.User;
 import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

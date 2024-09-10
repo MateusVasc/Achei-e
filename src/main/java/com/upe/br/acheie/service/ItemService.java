@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.upe.br.acheie.domain.dto.ItemDto;
-import com.upe.br.acheie.domain.model.Item;
-import com.upe.br.acheie.domain.model.Post;
+import com.upe.br.acheie.domain.entities.Item;
+import com.upe.br.acheie.domain.entities.Post;
 import com.upe.br.acheie.repository.ItemRepository;
 import com.upe.br.acheie.repository.PostRepository;
 import com.upe.br.acheie.domain.exceptions.AcheieException;

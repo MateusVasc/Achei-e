@@ -3,15 +3,15 @@ package com.upe.br.acheie.service;
 import com.upe.br.acheie.domain.dto.request.RegisterCommentRequest;
 import com.upe.br.acheie.domain.dto.response.RegisterCommentResponse;
 import com.upe.br.acheie.domain.dto.response.RemoveCommentResponse;
-import com.upe.br.acheie.domain.model.User;
+import com.upe.br.acheie.domain.entities.User;
 import com.upe.br.acheie.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.upe.br.acheie.domain.model.Comment;
-import com.upe.br.acheie.domain.model.Post;
+import com.upe.br.acheie.domain.entities.Comment;
+import com.upe.br.acheie.domain.entities.Post;
 import com.upe.br.acheie.repository.CommentRepository;
 import com.upe.br.acheie.repository.PostRepository;
 import com.upe.br.acheie.domain.exceptions.AcheieException;

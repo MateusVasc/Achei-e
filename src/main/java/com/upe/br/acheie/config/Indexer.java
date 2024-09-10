@@ -1,4 +1,4 @@
-package com.upe.br.acheie.infra;
+package com.upe.br.acheie.config;
 
 import com.upe.br.acheie.domain.exceptions.AcheieException;
 import jakarta.persistence.EntityManager;

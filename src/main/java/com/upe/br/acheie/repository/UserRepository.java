@@ -1,6 +1,6 @@
 package com.upe.br.acheie.repository;
 
-import com.upe.br.acheie.domain.model.User;
+import com.upe.br.acheie.domain.entities.User;
 import java.util.Optional;
 import java.util.UUID;
 

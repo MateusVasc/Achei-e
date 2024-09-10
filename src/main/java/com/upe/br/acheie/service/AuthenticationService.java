@@ -6,7 +6,7 @@ import com.upe.br.acheie.domain.dto.response.RegisterResponse;
 import com.upe.br.acheie.domain.dto.request.LoginRequest;
 import com.upe.br.acheie.domain.dto.response.RemoveAccountResponse;
 import com.upe.br.acheie.domain.dto.response.LoginResponse;
-import com.upe.br.acheie.domain.model.User;
+import com.upe.br.acheie.domain.entities.User;
 import com.upe.br.acheie.domain.exceptions.ErrorMessage;
 import com.upe.br.acheie.repository.UserRepository;
 import com.upe.br.acheie.domain.exceptions.AcheieException;
