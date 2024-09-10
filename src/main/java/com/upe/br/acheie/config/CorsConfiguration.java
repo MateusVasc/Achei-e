@@ -1,4 +1,4 @@
-package com.upe.br.acheie.config;
+package com.upe.br.acheie.infra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
