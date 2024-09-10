@@ -28,16 +28,16 @@ public class AuthenticationService {
   private final UserRepository userRepository;
 
   public LoginResponse loginUsuario(LoginRequest request) throws AcheieException {
-    var usuarioData = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
-    var auth = this.authenticationManager.authenticate(usuarioData);
+    var userData = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+    var auth = this.authenticationManager.authenticate(userData);
 
-    var token = tokenService.gerarToken((User) auth.getPrincipal());
+    var token = tokenService.createToken((User) auth.getPrincipal());
     User user = (User) this.userRepository.findByEmail(request.email());
     return new LoginResponse(user.getId(), token);
   }
 
-  public RegisterResponse cadastrarUsuario(RegisterRequest request) throws AcheieException {
-    if (!validarInfo(request)) {
+  public RegisterResponse registerNewUser(RegisterRequest request) throws AcheieException {
+    if (!validateInfo(request)) {
       throw new AcheieException(ErrorMessage.MSG_INFO_CADASTRO_INVALIDAS);
     }
 
@@ -45,16 +45,16 @@ public class AuthenticationService {
       throw new AcheieException(ErrorMessage.MSG_EMAIL_CADASTRADO);
     }
 
-    User userNovo = new User(request);
-    userNovo.setPassword(new BCryptPasswordEncoder().encode(request.senha()));
-    userNovo.setCreatedAt(LocalDate.now());
-    this.userRepository.save(userNovo);
+    User newUser = new User(request);
+    newUser.setPassword(new BCryptPasswordEncoder().encode(request.password()));
+    newUser.setCreatedAt(LocalDate.now());
+    this.userRepository.save(newUser);
 
-    return new RegisterResponse(userNovo.getEmail(), userNovo.getCreatedAt());
+    return new RegisterResponse(newUser.getEmail(), newUser.getCreatedAt());
   }
 
-  public RemoveAccountResponse excluirUsuarioPorEmail(String email) throws AcheieException {
-    if (!validarEmail(email)) {
+  public RemoveAccountResponse removeUserByEmail(String email) throws AcheieException {
+    if (!validateEmail(email)) {
       throw new AcheieException(ErrorMessage.MSG_EMAIL_INVALIDO);
     }
 
@@ -62,31 +62,31 @@ public class AuthenticationService {
       throw new AcheieException(ErrorMessage.MSG_EMAIL_CADASTRADO);
     }
 
-    User userParaRemocao = (User) this.userRepository.findByEmail(email);
-    this.userRepository.deleteById(userParaRemocao.getId());
-    userParaRemocao.setRemovedAt(LocalDate.now());
+    User userToRemove = (User) this.userRepository.findByEmail(email);
+    this.userRepository.deleteById(userToRemove.getId());
+    userToRemove.setRemovedAt(LocalDate.now());
 
-    return new RemoveAccountResponse(userParaRemocao.getEmail(),
-        userParaRemocao.getCreatedAt(), userParaRemocao.getRemovedAt());
+    return new RemoveAccountResponse(userToRemove.getEmail(),
+        userToRemove.getCreatedAt(), userToRemove.getRemovedAt());
   }
 
-  private boolean validarInfo(RegisterRequest request) {
-    return validarNome(request.nome()) &&
-        validarSobrenome(request.sobrenome()) &&
-        validarEmail(request.email()) &&
-        validarSenha(request.senha()) &&
-        validarTelefone(request.telefone());
+  private boolean validateInfo(RegisterRequest request) {
+    return validateName(request.name()) &&
+        validateLastname(request.lastname()) &&
+        validateEmail(request.email()) &&
+        validatePassword(request.password()) &&
+        validatePhone(request.phone());
   }
 
-  private boolean validarNome(String nome) {
-    return nome != null && !nome.trim().isEmpty() && nome.length() > 4;
+  private boolean validateName(String name) {
+    return name != null && !name.trim().isEmpty() && name.length() > 4;
   }
 
-  private boolean validarSobrenome(String sobrenome) {
-    return sobrenome != null && !sobrenome.trim().isEmpty() && sobrenome.length() > 4;
+  private boolean validateLastname(String lastname) {
+    return lastname != null && !lastname.trim().isEmpty() && lastname.length() > 4;
   }
 
-  private boolean validarEmail(String email) {
+  private boolean validateEmail(String email) {
     if (email == null || email.trim().isEmpty()) {
       return false;
     }
@@ -98,26 +98,26 @@ public class AuthenticationService {
     return matcher.matches();
   }
 
-  private boolean validarSenha(String senha) {
-    if (senha == null || senha.trim().isEmpty()) {
+  private boolean validatePassword(String password) {
+    if (password == null || password.trim().isEmpty()) {
       return false;
     }
 
-    String senhaRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-    Pattern pattern = Pattern.compile(senhaRegex);
-    Matcher matcher = pattern.matcher(senha);
+    String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+    Pattern pattern = Pattern.compile(passwordRegex);
+    Matcher matcher = pattern.matcher(password);
 
     return matcher.matches();
   }
 
-  private boolean validarTelefone(String telefone) {
-    if (telefone == null || telefone.trim().isEmpty()) {
+  private boolean validatePhone(String phone) {
+    if (phone == null || phone.trim().isEmpty()) {
       return false;
     }
 
-    String telefoneRegex = "^\\d{11}$";
-    Pattern pattern = Pattern.compile(telefoneRegex);
-    Matcher matcher = pattern.matcher(telefone);
+    String phoneRegex = "^\\d{11}$";
+    Pattern pattern = Pattern.compile(phoneRegex);
+    Matcher matcher = pattern.matcher(phone);
 
     return matcher.matches();
   }

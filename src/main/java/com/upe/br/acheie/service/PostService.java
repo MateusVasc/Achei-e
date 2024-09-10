@@ -25,14 +25,14 @@ import com.upe.br.acheie.domain.exceptions.ErrorMessage;
 import com.upe.br.acheie.domain.enums.Atualizacao;
 import com.upe.br.acheie.domain.enums.Category;
 import com.upe.br.acheie.repository.ItemRepository;
-import com.upe.br.acheie.repository.PostRepositorio;
+import com.upe.br.acheie.repository.PostRepository;
 import com.upe.br.acheie.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
-  private final PostRepositorio postRepo;
+  private final PostRepository postRepo;
 
   private final UserRepository usuarioRepo;
 
@@ -44,61 +44,61 @@ public class PostService {
 
   private final HibernateSearchService hibernateSearchService;
 
-  private static final List<String> CAMPOS_PARA_PESQUISA = Arrays.asList("item.titulo",
-      "item.descricao");
+  private static final List<String> SEARCH_FIELDS = Arrays.asList("item.title",
+      "item.description");
 
   @Transactional
-  public RegisterPostResponse cadastrarPost(UUID usuarioID, RegisterPostRequest request) {
-    User user = usuarioRepo.findById(usuarioID)
+  public RegisterPostResponse registerPost(UUID userId, RegisterPostRequest request) {
+    User user = usuarioRepo.findById(userId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
 
     if (request.type() == Type.DEVOLVIDO) {
       throw new AcheieException(ErrorMessage.MSG_ATUALIZAR_TIPO_POST_INVALIDO);
     }
 
-    Post novoPost = new Post(request, user);
-    postRepo.save(novoPost);
+    Post newPost = new Post(request, user);
+    postRepo.save(newPost);
 
-    UUID itemId = itemService.cadastrarItem(request.item(), novoPost.getId());
+    UUID itemId = itemService.registerItem(request.item(), newPost.getId());
     Item item = itemRepo.findById(itemId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_ITEM_NAO_ENCONTRADO));
-    novoPost.setItem(item);
+    newPost.setItem(item);
 
-    hibernateSearchService.indexEntity(novoPost);
+    hibernateSearchService.indexEntity(newPost);
 
-    return new RegisterPostResponse(novoPost.getId(), novoPost.getUser().getId(),
-        novoPost.getCreatedAt());
+    return new RegisterPostResponse(newPost.getId(), newPost.getUser().getId(),
+        newPost.getCreatedAt());
   }
 
-  public PostDto buscarPostEspecifico(UUID idPost) {
-    Post post = postRepo.findById(idPost)
+  public PostDto searchPostById(UUID postId) {
+    Post post = postRepo.findById(postId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_POST_NAO_ENCONTRADO));
     return new PostDto(post);
   }
 
-  public List<PostDto> buscarPosts() {
+  public List<PostDto> searchAllPosts() {
     return postRepo.findAll().stream().map(PostDto::new).toList();
   }
 
-  public List<PostDto> buscarPostsPorIdUsuario(UUID idUsuario) {
-    return postRepo.findByUsuarioId(idUsuario).stream().map(PostDto::new).toList();
+  public List<PostDto> searchPostsByUserId(UUID userId) {
+    return postRepo.findByUsuarioId(userId).stream().map(PostDto::new).toList();
   }
 
-  public List<PostDto> buscarPostsPorTexto(String texto, List<String> campos, int limite) {
-    List<String> camposDePesquisa = campos.isEmpty() ? CAMPOS_PARA_PESQUISA : campos;
+  public List<PostDto> searchPostsByText(String text, List<String> fields, int limit) {
+    List<String> searchFields = fields.isEmpty() ? SEARCH_FIELDS : fields;
 
-    boolean temCamposInvalidos = camposDePesquisa.stream()
-        .anyMatch(f -> !CAMPOS_PARA_PESQUISA.contains(f));
+    boolean areFieldsValid = searchFields.stream()
+        .anyMatch(f -> !SEARCH_FIELDS.contains(f));
 
-    if (temCamposInvalidos) {
+    if (areFieldsValid) {
       throw new IllegalArgumentException();
     }
 
-    return postRepo.searchBy(texto, limite, camposDePesquisa.toArray(new String[0])).stream()
+    return postRepo.searchBy(text, limit, searchFields.toArray(new String[0])).stream()
         .map(PostDto::new).toList();
   }
 
-  public Atualizacao atualizarPost(UUID postId, RegisterPostRequest request) {
+  public Atualizacao updatePost(UUID postId, RegisterPostRequest request) {
     Post post = postRepo.findById(postId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_POST_NAO_ENCONTRADO));
 
@@ -107,65 +107,65 @@ public class PostService {
     }
 
     post.setType(request.type());
-    this.itemService.atualizarItem(post.getItem().getId(), request.item());
+    this.itemService.updateItem(post.getItem().getId(), request.item());
 
     return Atualizacao.ATUALIZACAO_COM_SUCESSO;
   }
 
-  //Filtro: estado, categoria, tipo e data
+  //Filtro: estado, categoria, tipo e lostAt
 
-  public List<PostDto> filtrarPostsPorTipo(Type type) {
-    return postRepo.findByTipo(type).stream().map(PostDto::new).toList();
+  public List<PostDto> searchPostsByType(Type type) {
+    return postRepo.findByType(type).stream().map(PostDto::new).toList();
   }
 
 
-  public List<PostDto> filtrarPostsPorEstado(Status status) {
+  public List<PostDto> searchPostsByStatus(Status status) {
     return postRepo.findByItemEstado(status).stream().map(PostDto::new).toList();
   }
 
-  public List<PostDto> filtrarPostsPorCategoria(Category category) {
+  public List<PostDto> searchPostsByCategory(Category category) {
     return postRepo.findByItemCategoria(category).stream().map(PostDto::new).toList();
   }
 
-  public List<PostDto> filtrarPostsPorData(LocalDate inicio, LocalDate fim) {
-    if (fim == null) {
-      fim = LocalDate.now();
+  public List<PostDto> searchPostsByLostDate(LocalDate start, LocalDate end) {
+    if (end == null) {
+      end = LocalDate.now();
     }
 
-    return postRepo.findByItemData(inicio, fim).stream().map(PostDto::new).toList();
+    return postRepo.findByItemData(start, end).stream().map(PostDto::new).toList();
   }
 
-  public RemovePostResponse excluirPostPorId(UUID idPost, UUID idUsuario) {
-    Post postParaRemover = postRepo.findByUsuarioIdAndPostId(idUsuario, idPost)
+  public RemovePostResponse removePostById(UUID postId, UUID userId) {
+    Post postToRemove = postRepo.findByUsuarioIdAndPostId(userId, postId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_POST_DE_USUARIO_NAO_ENCONTRADO));
 
-    postRepo.deleteById(idPost);
-    postParaRemover.setRemovedAt(LocalDate.now());
+    postRepo.deleteById(postId);
+    postToRemove.setRemovedAt(LocalDate.now());
 
-    return new RemovePostResponse(postParaRemover.getCreatedAt(),
-        postParaRemover.getRemovedAt(), postParaRemover.getUser().getId());
+    return new RemovePostResponse(postToRemove.getCreatedAt(),
+        postToRemove.getRemovedAt(), postToRemove.getUser().getId());
   }
 
-  public CloseSearchResponse encerrarProcuraDeItem(CloseSearchRequest request) {
-    usuarioRepo.findById(request.idUsuario())
+  public CloseSearchResponse closeSearch(CloseSearchRequest request) {
+    usuarioRepo.findById(request.userId())
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
-    Post postParaEncerrar = postRepo.findById(request.idPost())
+    Post postToClose = postRepo.findById(request.postId())
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_POST_NAO_ENCONTRADO));
-    Item itemParaEncerrar = itemRepo.findById(postParaEncerrar.getItem().getId())
+    Item itemToClose = itemRepo.findById(postToClose.getItem().getId())
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_ITEM_NAO_ENCONTRADO));
 
-    if (!postParaEncerrar.getUser().getId().equals(request.idUsuario())) {
+    if (!postToClose.getUser().getId().equals(request.userId())) {
       throw new AcheieException(ErrorMessage.MSG_ENCERRAR_POST_INVALIDO);
     }
 
-    postParaEncerrar.setType(Type.DEVOLVIDO);
-    postParaEncerrar.setReturnedAt(LocalDate.now());
-    this.postRepo.save(postParaEncerrar);
+    postToClose.setType(Type.DEVOLVIDO);
+    postToClose.setReturnedAt(LocalDate.now());
+    this.postRepo.save(postToClose);
 
-    itemParaEncerrar.setStatus(Status.DEVOLVIDO);
-    this.itemRepo.save(itemParaEncerrar);
+    itemToClose.setStatus(Status.DEVOLVIDO);
+    this.itemRepo.save(itemToClose);
 
-    return new CloseSearchResponse(postParaEncerrar.getUser().getId(),
-        postParaEncerrar.getId(), postParaEncerrar.getReturnedAt());
+    return new CloseSearchResponse(postToClose.getUser().getId(),
+        postToClose.getId(), postToClose.getReturnedAt());
   }
 }

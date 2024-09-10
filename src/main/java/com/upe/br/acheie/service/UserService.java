@@ -19,44 +19,44 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserRepository usuarioRepo;
+  private final UserRepository userRepository;
 
-  public UserDto buscarUsuarioPorId(UUID idUsuario) {
-    User user = this.usuarioRepo.findById(idUsuario)
+  public UserDto searchUserById(UUID userId) {
+    User user = this.userRepository.findById(userId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
 
     return new UserDto(user);
   }
 
-  public Atualizacao atualizarUsuario(UUID idUsuario, UserDto userDto) {
-    User user = this.usuarioRepo.findById(idUsuario)
+  public Atualizacao updateUser(UUID userId, UserDto userDto) {
+    User user = this.userRepository.findById(userId)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
 
-    user.setName(userDto.nome());
-    user.setLastname(userDto.sobrenome());
-    user.setTelephone(userDto.telefone());
+    user.setName(userDto.name());
+    user.setLastname(userDto.lastname());
+    user.setTelephone(userDto.phone());
     user.setCourse(userDto.course());
     user.setSemester(userDto.semester());
-    user.setPhoto(userDto.foto());
+    user.setPhoto(userDto.photo());
 
-    this.usuarioRepo.save(user);
+    this.userRepository.save(user);
 
     return Atualizacao.ATUALIZACAO_COM_SUCESSO;
   }
 
-  public String requisitarMudarSenha(String email) {
+  public String requestChangePassword(String email) {
     email = email.replace(" ", "");
-    this.usuarioRepo.getByEmail(email)
+    this.userRepository.getByEmail(email)
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
 
-    return "O link para redefinição de senha foi enviado para o seu e-mail.";
+    return "O link para redefinição de password foi enviado para o seu e-mail.";
   }
 
-  public Atualizacao atualizarSenha(LoginRequest login) {
-    User user = this.usuarioRepo.getByEmail(login.email())
+  public Atualizacao updatePassword(LoginRequest login) {
+    User user = this.userRepository.getByEmail(login.email())
         .orElseThrow(() -> new AcheieException(ErrorMessage.MSG_USUARIO_NAO_ENCONTRADO));
-    user.setPassword(new BCryptPasswordEncoder().encode(login.senha()));
-    this.usuarioRepo.save(user);
+    user.setPassword(new BCryptPasswordEncoder().encode(login.password()));
+    this.userRepository.save(user);
     return Atualizacao.ATUALIZACAO_COM_SUCESSO;
   }
 }
