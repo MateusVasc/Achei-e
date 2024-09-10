@@ -20,7 +20,7 @@ public class AcheiEApplication {
   @Bean
   public ApplicationRunner buildIndex(Indexer indexer) {
     return (ApplicationArguments args) -> indexer.indexPersistedData(
-        "com.upe.br.acheie.dominio.modelos.Post");
+        "com.upe.br.acheie.domain.model.Post");
   }
 
 }

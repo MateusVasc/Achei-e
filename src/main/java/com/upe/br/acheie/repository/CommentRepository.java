@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
-  @Query("SELECT c FROM Comentario c WHERE c.usuario.id = :usuarioId AND c.post.id = :postId AND c.id = :comentarioId")
+  @Query("SELECT c FROM Comment c WHERE c.user.id = :usuarioId AND c.post.id = :postId AND c.id = :comentarioId")
   Optional<Comment> findByUsuarioIdAndPostIdAndComentarioId(
       @Param("usuarioId") UUID usuarioId,
       @Param("postId") UUID postId,
