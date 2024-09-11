@@ -1,6 +1,6 @@
 package com.upe.br.acheie.service;
 
-import com.upe.br.acheie.config.TokenService;
+import com.upe.br.acheie.config.JwtToken;
 import com.upe.br.acheie.domain.dto.request.RegisterRequest;
 import com.upe.br.acheie.domain.dto.response.RegisterResponse;
 import com.upe.br.acheie.domain.dto.request.LoginRequest;
@@ -24,14 +24,14 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
   private final AuthenticationManager authenticationManager;
-  private final TokenService tokenService;
+  private final JwtToken jwtToken;
   private final UserRepository userRepository;
 
-  public LoginResponse loginUsuario(LoginRequest request) throws AcheieException {
+  public LoginResponse userLogin(LoginRequest request) throws AcheieException {
     var userData = new UsernamePasswordAuthenticationToken(request.email(), request.password());
     var auth = this.authenticationManager.authenticate(userData);
 
-    var token = tokenService.createToken((User) auth.getPrincipal());
+    var token = jwtToken.createToken((User) auth.getPrincipal());
     User user = (User) this.userRepository.findByEmail(request.email());
     return new LoginResponse(user.getId(), token);
   }
