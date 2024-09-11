@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-  private final TokenService tokenService;
+  private final JwtToken jwtToken;
   private final UserRepository userRepository;
 
   @Override
@@ -26,7 +26,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     var token = this.retrieveToken(request);
 
     if (token != null) {
-      var subject = tokenService.validateToken(token);
+      var subject = jwtToken.validateToken(token);
       UserDetails user = this.userRepository.findByEmail(subject);
 
       var authentication = new UsernamePasswordAuthenticationToken(user, null,

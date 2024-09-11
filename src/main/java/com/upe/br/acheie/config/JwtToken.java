@@ -12,7 +12,7 @@ import java.time.ZoneOffset;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TokenService {
+public class JwtToken {
 
   private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
