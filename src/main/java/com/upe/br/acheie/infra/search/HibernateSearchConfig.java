@@ -1,4 +1,4 @@
-package com.upe.br.acheie.config;
+package com.upe.br.acheie.infra.search;
 
 import com.upe.br.acheie.service.HibernateSearchService;
 import jakarta.persistence.EntityManagerFactory;

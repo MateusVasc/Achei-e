@@ -1,4 +1,4 @@
-package com.upe.br.acheie.config;
+package com.upe.br.acheie.infra.security;
 
 import com.upe.br.acheie.repository.UserRepository;
 import jakarta.servlet.FilterChain;

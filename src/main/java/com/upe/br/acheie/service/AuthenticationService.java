@@ -1,6 +1,6 @@
 package com.upe.br.acheie.service;
 
-import com.upe.br.acheie.config.JwtToken;
+import com.upe.br.acheie.infra.security.JwtToken;
 import com.upe.br.acheie.domain.dto.request.RegisterRequest;
 import com.upe.br.acheie.domain.dto.response.RegisterResponse;
 import com.upe.br.acheie.domain.dto.request.LoginRequest;

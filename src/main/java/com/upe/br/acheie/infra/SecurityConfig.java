@@ -1,5 +1,6 @@
-package com.upe.br.acheie.config;
+package com.upe.br.acheie.infra;
 
+import com.upe.br.acheie.infra.security.SecurityFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

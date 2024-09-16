@@ -1,5 +1,6 @@
-package com.upe.br.acheie.repository;
+package com.upe.br.acheie.infra.search;
 
+import com.upe.br.acheie.repository.TextSearchRepository;
 import jakarta.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
