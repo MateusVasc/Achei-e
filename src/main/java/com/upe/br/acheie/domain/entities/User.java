@@ -78,9 +78,6 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Message> messages;
-
   public User(RegisterRequest request) {
     this.name = request.name();
     this.lastname = request.lastname();
