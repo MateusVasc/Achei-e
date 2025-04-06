@@ -1,7 +1,7 @@
 package com.upe.br.acheie;
 
-import com.upe.br.acheie.dominio.dto.ErroDto;
-import com.upe.br.acheie.dominio.utils.AcheieException;
+import com.upe.br.acheie.dtos.ErroDto;
+import com.upe.br.acheie.utils.AcheieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
