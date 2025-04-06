@@ -2,12 +2,12 @@ package com.upe.br.acheie.domain.models;
 
 
 import com.upe.br.acheie.domain.enums.Type;
-import com.upe.br.acheie.dtos.request.CadastrarPostRequest;
+import com.upe.br.acheie.dtos.request.CreatePostRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import com.upe.br.acheie.dtos.PostDto;
+import com.upe.br.acheie.dtos.PostDTO;
 
 
 import jakarta.persistence.CascadeType;
@@ -59,24 +59,24 @@ public class Post {
   private User user;
 
   @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
-  @IndexedEmbedded(includePaths = {"titulo", "descricao"})
+  @IndexedEmbedded(includePaths = {"title", "description"})
   private Item item;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
   
-  public Post(PostDto postDto, User user) {
-    this.id = postDto.idPost();
+  public Post(PostDTO postDto, User user) {
+    this.id = postDto.postId();
 	this.type = postDto.type();
-	this.createdAt = postDto.dataCriacao() != null ? postDto.dataCriacao() : LocalDate.now();
-	this.deletedAt = postDto.dataRemocao();
+	this.createdAt = postDto.createdAt() != null ? postDto.createdAt() : LocalDate.now();
+	this.deletedAt = postDto.deletedAt();
 	this.returnedAt = null;
 	this.user = user;
 	this.item = null;
 	this.comments = null;
   }
 
-  public Post(CadastrarPostRequest request, User user) {
+  public Post(CreatePostRequest request, User user) {
     this.type = request.type();
     this.createdAt = LocalDate.now();
     this.deletedAt = null;

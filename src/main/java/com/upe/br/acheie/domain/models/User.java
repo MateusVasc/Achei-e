@@ -1,8 +1,8 @@
 package com.upe.br.acheie.domain.models;
 
 
-import com.upe.br.acheie.dtos.UsuarioDto;
-import com.upe.br.acheie.dtos.request.CadastroRequest;
+import com.upe.br.acheie.dtos.UserDTO;
+import com.upe.br.acheie.dtos.request.RegisterRequest;
 import com.upe.br.acheie.domain.enums.Major;
 import com.upe.br.acheie.domain.enums.Semester;
 import jakarta.persistence.CascadeType;
@@ -74,10 +74,10 @@ public class User implements UserDetails {
   @Column(name = "remocao_da_conta")
   private LocalDate deletedAt;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Post> posts;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
   @ManyToMany
@@ -88,28 +88,28 @@ public class User implements UserDetails {
   )
   private Set<Chat> chats;
 
-  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Message> messages;
 
-  public User(CadastroRequest request) {
-    this.name = request.nome();
-    this.lastname = request.sobrenome();
+  public User(RegisterRequest request) {
+    this.name = request.name();
+    this.lastname = request.lastname();
     this.email = request.email();
-    this.password = request.senha();
+    this.password = request.password();
     this.major = request.major();
     this.semester = request.semester();
-    this.phone = request.telefone();
-    this.image = request.foto();
+    this.phone = request.phone();
+    this.image = request.image();
   }
   
-  public User(UsuarioDto usuarioDto) {
-    this.id = usuarioDto.idUsuario();
-	  this.name = usuarioDto.nome();
-	  this.lastname = usuarioDto.sobrenome();
-	  this.major = usuarioDto.major();
-	  this.semester = usuarioDto.semester();
-	  this.phone = usuarioDto.telefone();
-	  this.image = usuarioDto.foto();
+  public User(UserDTO userDTO) {
+    this.id = userDTO.userId();
+	  this.name = userDTO.name();
+	  this.lastname = userDTO.lastname();
+	  this.major = userDTO.major();
+	  this.semester = userDTO.semester();
+	  this.phone = userDTO.phone();
+	  this.image = userDTO.image();
   }
 
   @Override

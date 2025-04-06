@@ -4,7 +4,7 @@ package com.upe.br.acheie.domain.models;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.upe.br.acheie.dtos.ComentarioDto;
+import com.upe.br.acheie.dtos.CommentDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,9 +48,9 @@ public class Comment {
   @JoinColumn(name = "id_post", nullable = false)
   private Post post;
   
-  public Comment(ComentarioDto comentario, Post post, User user) {
-	  this.subject = comentario.assunto();
-	  this.createdAt = comentario.dataCriacao() != null ? comentario.dataCriacao() :
+  public Comment(CommentDTO comentario, Post post, User user) {
+	  this.subject = comentario.subject();
+	  this.createdAt = comentario.createdAt() != null ? comentario.createdAt() :
 		  LocalDate.now();
 	  this.deletedAt = null;
 	  this.user = user;

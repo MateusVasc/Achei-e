@@ -3,7 +3,7 @@ package com.upe.br.acheie.domain.models;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.upe.br.acheie.dtos.ItemDto;
+import com.upe.br.acheie.dtos.ItemDTO;
 import com.upe.br.acheie.domain.enums.Category;
 import com.upe.br.acheie.domain.enums.State;
 
@@ -61,13 +61,13 @@ public class Item {
   @JoinColumn(name = "id_post", nullable = false)
   private Post post;
   
-  public Item(ItemDto itemDto, Post post) {
+  public Item(ItemDTO itemDto, Post post) {
 	  this.state = itemDto.state();
 	  this.category = itemDto.category();
-	  this.description = itemDto.descricao();
-	  this.title = itemDto.titulo();
-	  this.image = itemDto.foto();
-	  this.date = itemDto.data();
+	  this.description = itemDto.description();
+	  this.title = itemDto.title();
+	  this.image = itemDto.image();
+	  this.date = itemDto.date();
 	  this.post = post;
   }
 }

@@ -10,12 +10,12 @@ public class AcheieException extends RuntimeException {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public AcheieException(String mensagem) {
-		super(mensagem);
+	public AcheieException(String message) {
+		super(message);
 	}
 	
-	public AcheieException(String mensagem, Throwable origem) {
-		super(mensagem, origem);
+	public AcheieException(String message, Throwable origin) {
+		super(message, origin);
 	}
 
 

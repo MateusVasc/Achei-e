@@ -1,6 +1,6 @@
 package com.upe.br.acheie.config.security;
 
-import com.upe.br.acheie.repository.UsuarioRepositorio;
+import com.upe.br.acheie.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class SecurityFilter extends OncePerRequestFilter {
 
   private final TokenService tokenService;
-  private final UsuarioRepositorio usuarioRepositorio;
+  private final UserRepository userRepository;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -27,7 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     if (token != null) {
       var subject = tokenService.validateToken(token);
-      UserDetails usuario = this.usuarioRepositorio.findByEmail(subject);
+      UserDetails usuario = this.userRepository.findByEmail(subject);
 
       var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
           usuario.getAuthorities());

@@ -13,40 +13,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.upe.br.acheie.dtos.EmailDto;
-import com.upe.br.acheie.dtos.UsuarioDto;
+import com.upe.br.acheie.dtos.EmailDTO;
+import com.upe.br.acheie.dtos.UserDTO;
 import com.upe.br.acheie.dtos.request.LoginRequest;
-import com.upe.br.acheie.utils.MensagemUtil;
-import com.upe.br.acheie.service.UsuarioServico;
+import com.upe.br.acheie.utils.MessageUtil;
+import com.upe.br.acheie.service.UserService;
 
 @RestController
 @RequestMapping("/achei-e")
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UsuarioServico usuarioServico;
+  private final UserService userService;
 
-  @GetMapping("/usuario/{id}")
-  public ResponseEntity<UsuarioDto> searchUserById(@PathVariable UUID id) {
-    return ResponseEntity.status(HttpStatus.OK).body(usuarioServico.buscarUsuarioPorId(id));
+  @GetMapping("/user/{id}")
+  public ResponseEntity<UserDTO> searchUserById(@PathVariable UUID id) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.searchUserById(id));
   }
 
-  @PutMapping("/usuario")
-  public ResponseEntity<MensagemUtil> updateUser(
-      @RequestParam(value = "usuarioId") UUID idUsuario, @RequestBody UsuarioDto usuarioDto) {
-    return ResponseEntity.status(HttpStatus.OK).body(new MensagemUtil(
-        this.usuarioServico.atualizarUsuario(idUsuario, usuarioDto).getMessage()));
+  @PutMapping("/user")
+  public ResponseEntity<MessageUtil> updateUser(
+      @RequestParam(value = "usuarioId") UUID idUsuario, @RequestBody UserDTO userDTO) {
+    return ResponseEntity.status(HttpStatus.OK).body(new MessageUtil(
+        this.userService.updateUser(idUsuario, userDTO).getMessage()));
   }
 
-  @PutMapping("/usuario/nova-senha")
-  public ResponseEntity<MensagemUtil> requestPasswordChange(@RequestBody EmailDto emailDto) {
+  @PutMapping("/user/nova-password")
+  public ResponseEntity<MessageUtil> requestPasswordChange(@RequestBody EmailDTO emailDto) {
       return ResponseEntity.status(HttpStatus.OK)
-          .body(new MensagemUtil(this.usuarioServico.requisitarMudarSenha(emailDto.email())));
+          .body(new MessageUtil(this.userService.requestPasswordChange(emailDto.email())));
     }
 
-    @PutMapping("usuario/redefinir-senha")
-    public ResponseEntity<MensagemUtil> updatePassword(@RequestBody LoginRequest login){
+    @PutMapping("user/redefinir-password")
+    public ResponseEntity<MessageUtil> updatePassword(@RequestBody LoginRequest login){
       return ResponseEntity.status(HttpStatus.OK)
-          .body(new MensagemUtil(this.usuarioServico.atualizarSenha(login).getMessage()));
+          .body(new MessageUtil(this.userService.updatePassword(login).getMessage()));
     }
 }
