@@ -9,16 +9,19 @@ import com.upe.br.acheie.utils.AcheieException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenService {
 
-  private static final String SECRET_KEY = System.getenv("SECRET_KEY");
+  @Value("${app.security.secret-key}")
+  private String SECRET;
 
   public String generateToken(User user) throws AcheieException {
     try {
-      Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+      Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
       return JWT.create()
           .withIssuer("acheie-api")
@@ -33,7 +36,7 @@ public class TokenService {
 
   public String validateToken(String token) {
     try {
-      Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+      Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
       return JWT.require(algorithm)
           .withIssuer("acheie-api")

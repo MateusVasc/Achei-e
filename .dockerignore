@@ -1,7 +1,35 @@
+# Git
 .git
 .gitignore
-target/
-*.log
-.idea/
+
+# IDE
+.idea
 *.iml
-.env 
+.vscode
+
+# Maven
+target/
+**/target/
+**/*.jar
+!**/target/*.jar
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+.DS_Store
+
+# Arquivos de configuração local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos de build
+**/node_modules/
+**/.next/
+**/out/
+**/dist/ 
