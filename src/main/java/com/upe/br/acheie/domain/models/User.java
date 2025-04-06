@@ -18,6 +18,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -32,6 +33,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@Table(name = "usuario")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

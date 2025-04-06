@@ -25,7 +25,7 @@ import com.upe.br.acheie.repository.ItemRepository;
 import com.upe.br.acheie.repository.PostRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class ItemServicoTest {
+public class ItemServiceTest {
 
 	@Mock
 	ItemRepository itemRepo;
@@ -35,7 +35,7 @@ public class ItemServicoTest {
 	
 	@Spy
 	@InjectMocks
-	ItemServico itemServico;
+	ItemService itemService;
 	
 	Post post;
 	Item item;
@@ -43,7 +43,7 @@ public class ItemServicoTest {
 	
 	@BeforeEach
 	void init() {
-		itemDto = new ItemDTO(State.LOST, Category.ELETRONICO, "Fone de ouvido rosa perdido no LAB1", "Fone de ouvido perdido", LocalDate.now(), null);
+		itemDto = new ItemDTO(State.LOST, Category.ELECTRONIC, "Fone de ouvido rosa perdido no LAB1", "Fone de ouvido perdido", LocalDate.now(), null);
 		post = new Post();
 		item = new Item(itemDto, this.post);
 		this.post.setItem(item);
@@ -51,7 +51,7 @@ public class ItemServicoTest {
 	
 	@Test
 	@DisplayName("Deve cadastrar um item com sucesso")
-	void cadastrarItemCase1() {
+	void createItemCase1() {
 		when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
 		 when(this.itemRepo.save(Mockito.any(Item.class))).thenAnswer(invocation -> {
 		        Item savedItem = invocation.getArgument(0);
@@ -59,7 +59,7 @@ public class ItemServicoTest {
 		        return savedItem;
 		    });
 		
-		UUID idItem = this.itemServico.cadastrarItem(this.itemDto, this.post.getId());
+		UUID idItem = this.itemService.createItem(this.itemDto, this.post.getId());
 		
 		Assertions.assertNotNull(idItem);
 	}

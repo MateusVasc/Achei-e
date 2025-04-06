@@ -19,13 +19,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-class AutorizacaoServicoTest {
+class AuthorizationServiceTest {
 
   @Mock
   private UserRepository userRepository;
 
   @InjectMocks
-  private AutorizacaoServico autorizacaoServico;
+  private AuthorizationService authorizationService;
 
   @Nested
   class loadUserByUsername {
@@ -42,7 +42,7 @@ class AutorizacaoServicoTest {
       when(userRepository.findByEmail(email)).thenReturn(user);
 
       // Act
-      UserDetails userDetails = autorizacaoServico.loadUserByUsername(email);
+      UserDetails userDetails = authorizationService.loadUserByUsername(email);
 
       // Assert
       assertNotNull(userDetails);
@@ -60,7 +60,7 @@ class AutorizacaoServicoTest {
 
       // Act e Assert
       assertThrows(UsernameNotFoundException.class, () -> {
-        autorizacaoServico.loadUserByUsername(email);
+        authorizationService.loadUserByUsername(email);
       });
     }
   }

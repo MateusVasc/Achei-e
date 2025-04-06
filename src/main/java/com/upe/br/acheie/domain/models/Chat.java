@@ -26,9 +26,9 @@ public class Chat {
   @Column(name = "id_conversa")
   private UUID id;
 
-  @ManyToMany(mappedBy = "conversas")
+  @ManyToMany(mappedBy = "chats")
   private Set<User> users;
 
-  @OneToMany(mappedBy = "conversa", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Message> messages;
 }

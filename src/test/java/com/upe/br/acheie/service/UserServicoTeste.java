@@ -13,59 +13,59 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.upe.br.acheie.dtos.UsuarioDto;
-import com.upe.br.acheie.domain.models.Usuario;
-import com.upe.br.acheie.repository.UsuarioRepositorio;
+import com.upe.br.acheie.dtos.UserDTO;
+import com.upe.br.acheie.domain.models.User;
+import com.upe.br.acheie.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class UsuarioServicoTeste {
+public class UserServicoTeste {
 
 	
 	@Mock
-	UsuarioRepositorio usuarioRepo;
+	UserRepository usuarioRepo;
 	
 	@Spy
 	@InjectMocks
-	UsuarioServico usuarioServico;
+	UserService userService;
 	
-	Usuario usuario;
-	UsuarioDto usuarioDto;
+	User user;
+	UserDTO userDTO;
 	
 //	@BeforeEach
 //	void init() {
 //		usuarioDto = new UsuarioDto("Marcos", "Silva", Curso.ENGENHARIA_DE_SOFTWARE, Periodo.OITAVO,
 //				"8199540337", null);
-//		usuario = new Usuario(usuarioDto);
+//		user = new Usuario(usuarioDto);
 //	}
 	
 	@Test
 	@DisplayName("Deve retornar os dados de um usuário pelo seu ID")
 	void buscarUsuarioPorIdCase1() {
-		when(this.usuarioRepo.findById(this.usuario.getId())).thenReturn(Optional.of(this.usuario));
+		when(this.usuarioRepo.findById(this.user.getId())).thenReturn(Optional.of(this.user));
 		
-		UsuarioDto localUsuarioDto = this.usuarioServico.buscarUsuarioPorId(this.usuario.getId());
+		UserDTO localUserDTO = this.userService.searchUserById(this.user.getId());
 		
-		Assertions.assertNotNull(localUsuarioDto);
+		Assertions.assertNotNull(localUserDTO);
 		
 	}
 	
 	@Test
 	@DisplayName("Não deve retornar nenhum usuário. Optional#Empty")
 	void buscarUsuarioPorIdCase2() {
-		when(this.usuarioRepo.findById(this.usuario.getId())).thenReturn(Optional.empty());
+		when(this.usuarioRepo.findById(this.user.getId())).thenReturn(Optional.empty());
 		
-		UsuarioDto localUsuarioDto = this.usuarioServico.buscarUsuarioPorId(this.usuario.getId());
+		UserDTO localUserDTO = this.userService.searchUserById(this.user.getId());
 		
-		Assertions.assertNull(localUsuarioDto);
+		Assertions.assertNull(localUserDTO);
 	}
 	
 //	@Test
 //	@DisplayName("Deve lançar IllegalArgumentException pelo ID ser nulo")
 //	void buscarUsuarioPorIdCase3() {
-//		when(this.usuarioRepo.findById(this.usuario.getId())).thenThrow(IllegalArgumentException.class);
+//		when(this.usuarioRepo.findById(this.user.getId())).thenThrow(IllegalArgumentException.class);
 //		doNothing().when(this.usuarioServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
 //
-//		UsuarioDto localUsuario = this.usuarioServico.buscarUsuarioPorId(this.usuario.getId());
+//		UsuarioDto localUsuario = this.usuarioServico.buscarUsuarioPorId(this.user.getId());
 //		Assertions.assertNull(localUsuario);
 //	}
 }	

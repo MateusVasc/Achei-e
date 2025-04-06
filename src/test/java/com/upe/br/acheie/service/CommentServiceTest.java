@@ -9,45 +9,45 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.upe.br.acheie.dtos.ComentarioDto;
-import com.upe.br.acheie.dtos.UsuarioDto;
-import com.upe.br.acheie.domain.models.Comentario;
+import com.upe.br.acheie.dtos.CommentDTO;
+import com.upe.br.acheie.dtos.UserDTO;
+import com.upe.br.acheie.domain.models.Comment;
 import com.upe.br.acheie.domain.models.Post;
-import com.upe.br.acheie.domain.models.Usuario;
-import com.upe.br.acheie.repository.ComentarioRepositorio;
-import com.upe.br.acheie.repository.PostRepositorio;
-import com.upe.br.acheie.repository.UsuarioRepositorio;
+import com.upe.br.acheie.domain.models.User;
+import com.upe.br.acheie.repository.CommentRepository;
+import com.upe.br.acheie.repository.PostRepository;
+import com.upe.br.acheie.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class ComentarioServiceTest {
+public class CommentServiceTest {
 
 
   @Mock
-  ComentarioRepositorio comentarioRepo;
+  CommentRepository comentarioRepo;
 
   @Mock
-  PostRepositorio postRepo;
+  PostRepository postRepo;
 
   @Mock
-  UsuarioRepositorio usuarioRepo;
+  UserRepository usuarioRepo;
 
   @Spy
   @InjectMocks
-  ComentarioServico comentarioServico;
+  CommentService commentService;
 
   Post post;
-  Usuario usuario;
-  Comentario comentario;
-  ComentarioDto comentarioDto;
-  UsuarioDto usuarioDto;
+  User user;
+  Comment comment;
+  CommentDTO commentDTO;
+  UserDTO userDTO;
 
   @BeforeEach
   void init() {
-    usuario = new Usuario();
-    usuarioDto = new UsuarioDto(usuario);
+    user = new User();
+    userDTO = new UserDTO(user);
     post = new Post();
-    comentarioDto = new ComentarioDto("Essa chave é minha!", usuarioDto, LocalDate.now(), null);
-    comentario = new Comentario(comentarioDto, post, usuario);
+    commentDTO = new CommentDTO("Essa chave é minha!", userDTO, LocalDate.now(), null);
+    comment = new Comment(commentDTO, post, user);
   }
 
 
@@ -56,11 +56,11 @@ public class ComentarioServiceTest {
 //  void cadastrarComentarioCase1() {
 //
 //    when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
-//    when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
+//    when(this.usuarioRepo.getReferenceById(this.user.getId())).thenReturn(this.user);
 //    when(this.comentarioRepo.save(Mockito.any(Comentario.class))).thenReturn(this.comentario);
 //
 //    Cadastro estadoCadastro = this.comentarioServico.cadastrarComentario(this.post.getId(),
-//        this.usuario.getId(), this.comentarioDto);
+//        this.user.getId(), this.comentarioDto);
 //
 //    Assertions.assertEquals(Cadastro.SUCESSO_CADASTRO, estadoCadastro);
 //
@@ -71,11 +71,11 @@ public class ComentarioServiceTest {
 //	void cadastrarComentarioCase2() {
 //
 //		when(this.postRepo.getReferenceById(this.post.getId())).thenReturn(this.post);
-//		when(this.usuarioRepo.getReferenceById(this.usuario.getId())).thenReturn(this.usuario);
+//		when(this.usuarioRepo.getReferenceById(this.user.getId())).thenReturn(this.user);
 //		when(this.comentarioRepo.save(Mockito.any())).thenThrow(IllegalArgumentException.class);
 //		doNothing().when(this.comentarioServico).tratarErros(ArgumentMatchers.<IllegalArgumentException>any());
 //
-//		Cadastro estadoCadastro = this.comentarioServico.cadastrarComentario(this.post.getId(), this.usuario.getId(), this.comentarioDto);
+//		Cadastro estadoCadastro = this.comentarioServico.cadastrarComentario(this.post.getId(), this.user.getId(), this.comentarioDto);
 //
 //		Assertions.assertEquals(Cadastro.ERRO_CADASTRO, estadoCadastro);
 //

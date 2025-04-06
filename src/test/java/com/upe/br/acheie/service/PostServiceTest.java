@@ -28,7 +28,7 @@ import com.upe.br.acheie.repository.PostRepository;
 import com.upe.br.acheie.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class PostServicoTest {
+public class PostServiceTest {
 	
 	@Mock
 	PostRepository postRepo;
@@ -44,7 +44,7 @@ public class PostServicoTest {
 	
 	@Spy
 	@InjectMocks
-	PostServico postServico;
+	PostService postService;
 	
 	UserDTO userDTO;
 	ItemDTO itemDto;
@@ -106,20 +106,20 @@ public class PostServicoTest {
 	
 	@Test
 	@DisplayName("Deve obter um post específico com sucesso")
-	void buscarPostEspecificoCase1() {
+	void searchPostByIdCase1() {
 		when(this.postRepo.findById(this.post.getId())).thenReturn(Optional.of(this.post));
 		
-		PostDTO localPostDTO = this.postServico.buscarPostEspecifico(this.post.getId());
+		PostDTO localPostDTO = this.postService.searchPostById(this.post.getId());
 		
 		Assertions.assertNotNull(localPostDTO);
 	}
 	
 	@Test
 	@DisplayName("Não deve obter nenhum post. Optional#Empty")
-	void buscarPostEspecificoCase2() {
+	void searchPostByIdCase2() {
 		when(this.postRepo.findById(this.post.getId())).thenReturn(Optional.empty());
 		
-		PostDTO localPostDTO = this.postServico.buscarPostEspecifico(this.post.getId());
+		PostDTO localPostDTO = this.postService.searchPostById(this.post.getId());
 		
 		Assertions.assertNull(localPostDTO);
 	}
@@ -136,10 +136,10 @@ public class PostServicoTest {
 	
 	@Test
 	@DisplayName("Deve obter todos os posts")
-	void buscarPostsCase1() {
+	void searchPostsCase1() {
 		when(this.postRepo.findAll()).thenReturn(List.of(this.post));
 		
-		List<PostDTO> postsDto = this.postServico.buscarPosts();
+		List<PostDTO> postsDto = this.postService.searchPosts();
 		
 		Assertions.assertNotNull(postsDto);
 	}
