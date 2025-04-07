@@ -9,6 +9,7 @@ import com.upe.br.auth.domain.entities.User;
 import com.upe.br.auth.exception.AuthException;
 import com.upe.br.auth.exception.ExceptionMessages;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -35,7 +36,7 @@ public class JwtUtil {
                     .withExpiresAt(generateExpirationDateForAccessToken())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw new AuthException(ExceptionMessages.FAILED_TO_CREATE_TOKEN, e);
+            throw new AuthException(ExceptionMessages.FAILED_TO_CREATE_TOKEN, e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

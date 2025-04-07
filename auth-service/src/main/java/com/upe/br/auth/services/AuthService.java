@@ -11,6 +11,7 @@ import com.upe.br.auth.repositories.RoleRepository;
 import com.upe.br.auth.repositories.UserRepository;
 import com.upe.br.auth.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,7 @@ public class AuthService {
 
     public void createUser(RegisterRequest request) {
         if (this.userRepository.findByEmail(request.email()).isPresent()) {
-            throw new AuthException(ExceptionMessages.USER_ALREADY_EXISTIS);
+            throw new AuthException(ExceptionMessages.USER_ALREADY_EXISTIS, HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();
