@@ -40,6 +40,22 @@ public class JwtUtil {
         }
     }
 
+    public String generateRefreshToken(User user) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            return JWT.create()
+                    .withIssuer("auth-upe-api")
+                    .withSubject(user.getEmail())
+                    .withClaim("roles", collectRoles(user))
+                    .withClaim("permissions", collectPermissions(user))
+                    .withExpiresAt(generateExpirationDateForRefreshToken())
+                    .sign(algorithm);
+        } catch (JWTCreationException e) {
+            throw new AuthException(ExceptionMessages.FAILED_TO_CREATE_TOKEN, e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -56,6 +72,10 @@ public class JwtUtil {
 
     private Instant generateExpirationDateForAccessToken() {
         return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    private Instant generateExpirationDateForRefreshToken() {
+        return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00"));
     }
 
     private List<String> collectRoles(User user) {
