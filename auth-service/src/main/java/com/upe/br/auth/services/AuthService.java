@@ -13,10 +13,12 @@ import com.upe.br.auth.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Service
@@ -42,6 +44,7 @@ public class AuthService {
         user.setMajor(request.major());
         user.setSemester(request.semester());
         user.setPhone(request.phone());
+        user.setCreatedAt(LocalDateTime.now());
 
         Role userRole = this.roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -53,13 +56,18 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
         User user = this.userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        String accessToken = this.jwtUtil.generateAccessToken((User) auth.getPrincipal());
+        try {
+            var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return new LoginResponse(user.getId(), accessToken);
+            String accessToken = this.jwtUtil.generateAccessToken(user);
+
+            return new LoginResponse(user.getId(), accessToken);
+        } catch (BadCredentialsException e) {
+            throw new AuthException(ExceptionMessages.INVALID_CREDENTIALS, e, HttpStatus.UNAUTHORIZED);
+        }
     }
 }

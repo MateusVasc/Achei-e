@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -54,10 +54,10 @@ public class User implements UserDetails {
     private byte[] image;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "deactivated_at")
-    private LocalDate deactivatedAt;
+    private LocalDateTime deactivatedAt;
 
     @ManyToMany
     @JoinTable(
