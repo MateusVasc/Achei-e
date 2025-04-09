@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,27 @@ public class JwtUtil {
 
     private Instant generateExpirationDateForRefreshToken() {
         return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public LocalDateTime getExpirationDateFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            return JWT.require(algorithm)
+                    .withIssuer("auth-upe-api")
+                    .build()
+                    .verify(token)
+                    .getExpiresAt()
+                    .toInstant()
+                    .atOffset(ZoneOffset.of("-03:00"))
+                    .toLocalDateTime();
+        } catch (Exception e) {
+            throw new AuthException(
+                    ExceptionMessages.FAILED_TO_GET_EXPIRATION_TIME,
+                    e,
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     private List<String> collectRoles(User user) {
