@@ -1,12 +1,15 @@
 package com.upe.br.auth.services;
 
+import com.upe.br.auth.domain.entities.RefreshToken;
 import com.upe.br.auth.domain.entities.Role;
 import com.upe.br.auth.domain.entities.User;
 import com.upe.br.auth.dtos.LoginRequest;
 import com.upe.br.auth.dtos.LoginResponse;
+import com.upe.br.auth.dtos.RefreshTokenRequest;
 import com.upe.br.auth.dtos.RegisterRequest;
 import com.upe.br.auth.exception.AuthException;
 import com.upe.br.auth.exception.ExceptionMessages;
+import com.upe.br.auth.repositories.RefreshTokenRepository;
 import com.upe.br.auth.repositories.RoleRepository;
 import com.upe.br.auth.repositories.UserRepository;
 import com.upe.br.auth.utils.JwtUtil;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -27,6 +31,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -64,10 +69,49 @@ public class AuthService {
             var auth = this.authenticationManager.authenticate(usernamePassword);
 
             String accessToken = this.jwtUtil.generateAccessToken(user);
+            String refreshToken = this.jwtUtil.generateRefreshToken(user);
 
-            return new LoginResponse(user.getId(), accessToken);
+            RefreshToken refreshTokenToSave = new RefreshToken();
+            refreshTokenToSave.setToken(refreshToken);
+            refreshTokenToSave.setUser(user);
+            refreshTokenToSave.setExpiresAt(jwtUtil.getExpirationDateFromToken(refreshToken));
+
+            this.refreshTokenRepository.save(refreshTokenToSave);
+
+            return new LoginResponse(user.getId(), accessToken, refreshToken);
         } catch (BadCredentialsException e) {
             throw new AuthException(ExceptionMessages.INVALID_CREDENTIALS, e, HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    public LoginResponse refreshToken(RefreshTokenRequest request) {
+        String email = this.jwtUtil.validateToken(request.refreshToken());
+
+        if (email == null) {
+            throw new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
+        }
+
+        RefreshToken refreshToken = this.refreshTokenRepository.findByTokenAndIsRevokedFalse(request.refreshToken())
+                .orElseThrow(() -> new AuthException(ExceptionMessages.TOKEN_WAS_REVOKED, HttpStatus.UNAUTHORIZED));
+
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        String accessToken = this.jwtUtil.generateAccessToken(user);
+
+        refreshToken.setIsRevoked(true);
+        refreshToken.setLastUsedAt(LocalDateTime.now());
+        this.refreshTokenRepository.save(refreshToken);
+
+        String newRefreshToken = this.jwtUtil.generateRefreshToken(user);
+
+        RefreshToken refreshTokenToSave = new RefreshToken();
+        refreshTokenToSave.setToken(newRefreshToken);
+        refreshTokenToSave.setUser(user);
+        refreshTokenToSave.setExpiresAt(jwtUtil.getExpirationDateFromToken(newRefreshToken));
+
+        this.refreshTokenRepository.save(refreshTokenToSave);
+
+        return new LoginResponse(user.getId(), accessToken, newRefreshToken);
     }
 }
