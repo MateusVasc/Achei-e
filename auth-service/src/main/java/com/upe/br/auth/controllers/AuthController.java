@@ -41,8 +41,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(String refreshToken) {
-        this.authService.logout(refreshToken);
+    public ResponseEntity<Void> logout(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestParam String refreshToken
+    ) {
+        accessToken = accessToken.replace("Bearer ", "");
+        this.authService.logout(refreshToken, accessToken);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
