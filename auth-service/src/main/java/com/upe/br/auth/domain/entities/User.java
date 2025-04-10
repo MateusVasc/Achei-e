@@ -53,11 +53,23 @@ public class User implements UserDetails {
 
     private byte[] image;
 
+    @Column(name = "is_enabled", nullable = false)
+    private boolean isEnabled = false;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name = "failed_login_attempts")
+    private int failedLoginAttempts = 0;
+
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
+
+    @Column(name = "account_locked_until")
+    private LocalDateTime accountLockedUntil;
 
     @ManyToMany
     @JoinTable(
@@ -97,7 +109,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountLockedUntil == null || accountLockedUntil.isBefore(LocalDateTime.now());
     }
 
     @Override
@@ -107,6 +119,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }
