@@ -1,6 +1,7 @@
 package com.upe.br.auth.infra;
 
 import com.upe.br.auth.domain.entities.User;
+import com.upe.br.auth.repositories.BlacklistedTokenRepository;
 import com.upe.br.auth.repositories.UserRepository;
 import com.upe.br.auth.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -26,7 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
-
+    private final BlacklistedTokenRepository blacklistedTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -39,6 +40,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         token = token.replace("Bearer ", "");
+
+        if (blacklistedTokenRepository.existsByToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has been revoked");
+            return;
+        }
 
         String email = this.jwtUtil.validateToken(token);
 
