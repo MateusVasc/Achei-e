@@ -1,5 +1,6 @@
 package com.upe.br.auth.services;
 
+import com.upe.br.auth.domain.entities.BlacklistedToken;
 import com.upe.br.auth.domain.entities.RefreshToken;
 import com.upe.br.auth.domain.entities.Role;
 import com.upe.br.auth.domain.entities.User;
@@ -9,6 +10,7 @@ import com.upe.br.auth.dtos.RefreshTokenRequest;
 import com.upe.br.auth.dtos.RegisterRequest;
 import com.upe.br.auth.exception.AuthException;
 import com.upe.br.auth.exception.ExceptionMessages;
+import com.upe.br.auth.repositories.BlacklistedTokenRepository;
 import com.upe.br.auth.repositories.RefreshTokenRepository;
 import com.upe.br.auth.repositories.RoleRepository;
 import com.upe.br.auth.repositories.UserRepository;
@@ -22,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,9 +33,15 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final BlacklistedTokenRepository blacklistedTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+
+    private static final int MAX_LOGIN_ATTEMPTS = 5;
+    private static final int LOCK_TIME_MINUTES = 30;
+    private static final int MAX_REFRESH_TOKENS = 5;
+    private static final int MAX_REFRESH_ATTEMPTS = 3;
 
     public void createUser(RegisterRequest request) {
         if (this.userRepository.findByEmail(request.email()).isPresent()) {
@@ -63,10 +70,22 @@ public class AuthService {
         User user = this.userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
+        if (!user.isEnabled()) {
+            throw new AuthException(ExceptionMessages.ACCOUNT_NOT_ENABLED, HttpStatus.FORBIDDEN);
+        }
+
+        if (user.getAccountLockedUntil() != null && user.getAccountLockedUntil().isAfter(LocalDateTime.now())) {
+            throw new AuthException(ExceptionMessages.ACCOUNT_LOCKED, HttpStatus.FORBIDDEN);
+        }
+
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.password());
 
         try {
             var auth = this.authenticationManager.authenticate(usernamePassword);
+
+            user.setFailedLoginAttempts(0);
+            user.setLastLoginAt(LocalDateTime.now());
+            this.userRepository.save(user);
 
             String accessToken = this.jwtUtil.generateAccessToken(user);
             String refreshToken = this.jwtUtil.generateRefreshToken(user);
@@ -80,7 +99,16 @@ public class AuthService {
 
             return new LoginResponse(user.getId(), accessToken, refreshToken);
         } catch (BadCredentialsException e) {
-            throw new AuthException(ExceptionMessages.INVALID_CREDENTIALS, e, HttpStatus.UNAUTHORIZED);
+            user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+
+            if (user.getFailedLoginAttempts() >= MAX_LOGIN_ATTEMPTS) {
+                user.setAccountLockedUntil(LocalDateTime.now().plusMinutes(LOCK_TIME_MINUTES));
+                this.userRepository.save(user);
+                throw new AuthException(ExceptionMessages.TOO_MANY_ATTEMPTS, HttpStatus.FORBIDDEN);
+            }
+
+            this.userRepository.save(user);
+            throw new AuthException(ExceptionMessages.INVALID_CREDENTIALS, e, HttpStatus.FORBIDDEN);
         }
     }
 
@@ -92,17 +120,39 @@ public class AuthService {
         }
 
         RefreshToken refreshToken = this.refreshTokenRepository.findByTokenAndIsRevokedFalse(request.refreshToken())
-                .orElseThrow(() -> new AuthException(ExceptionMessages.TOKEN_WAS_REVOKED, HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new AuthException(ExceptionMessages.TOKEN_WAS_REVOKED, HttpStatus.FORBIDDEN));
+
+        if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            refreshToken.setIsRevoked(true);
+            throw new AuthException(ExceptionMessages.TOKEN_EXPIRED, HttpStatus.FORBIDDEN);
+        }
 
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        String accessToken = this.jwtUtil.generateAccessToken(user);
+        if (!user.isEnabled()) {
+            throw new AuthException(ExceptionMessages.ACCOUNT_LOCKED, HttpStatus.FORBIDDEN);
+        }
+
+        if (user.getAccountLockedUntil() != null && user.getAccountLockedUntil().isAfter(LocalDateTime.now())) {
+            throw new AuthException(ExceptionMessages.ACCOUNT_LOCKED, HttpStatus.FORBIDDEN);
+        }
 
         refreshToken.setIsRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
         this.refreshTokenRepository.save(refreshToken);
 
+        long activeRefreshTokens = this.refreshTokenRepository.countByUserAndIsRevokedFalse(user);
+
+        if (activeRefreshTokens >= MAX_REFRESH_TOKENS) {
+            this.refreshTokenRepository.findTopByUserAndIsRevokedFalseOrderByCreatedAtAsc(user)
+                    .ifPresent(oldRefreshToken -> {
+                        oldRefreshToken.setIsRevoked(true);
+                        this.refreshTokenRepository.save(oldRefreshToken);
+                    });
+        }
+
+        String accessToken = this.jwtUtil.generateAccessToken(user);
         String newRefreshToken = this.jwtUtil.generateRefreshToken(user);
 
         RefreshToken refreshTokenToSave = new RefreshToken();
@@ -115,11 +165,59 @@ public class AuthService {
         return new LoginResponse(user.getId(), accessToken, newRefreshToken);
     }
 
-    public void logout(String refreshToken) {
-        RefreshToken refreshTokenRevoked = this.refreshTokenRepository.findByToken(refreshToken)
-                .orElseThrow(() -> new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.BAD_REQUEST));
+    public void logout(String refreshToken, String accessToken) {
+        String email = this.jwtUtil.validateToken(refreshToken);
 
-        refreshTokenRevoked.setIsRevoked(true);
-        refreshTokenRevoked.setLastUsedAt(LocalDateTime.now());
+        if (email == null) {
+            throw new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
+        }
+
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        RefreshToken token = this.refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN));
+
+        if (!token.getUser().getId().equals(user.getId())) {
+            throw new AuthException(ExceptionMessages.TOKEN_NOT_BELONG_TO_USER, HttpStatus.FORBIDDEN);
+        }
+
+        if (token.getIsRevoked()) {
+            throw new AuthException(ExceptionMessages.TOKEN_WAS_REVOKED, HttpStatus.FORBIDDEN);
+        }
+
+        if (token.getExpiresAt().isBefore(LocalDateTime.now())) {
+            token.setIsRevoked(true);
+            this.refreshTokenRepository.save(token);
+            throw new AuthException(ExceptionMessages.TOKEN_EXPIRED, HttpStatus.FORBIDDEN);
+        }
+
+        token.setIsRevoked(true);
+        token.setLastUsedAt(LocalDateTime.now());
+        this.refreshTokenRepository.save(token);
+
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        blacklistedToken.setToken(accessToken);
+        blacklistedToken.setExpiresAt(jwtUtil.getExpirationDateFromToken(accessToken));
+        blacklistedToken.setUser(user);
+        this.blacklistedTokenRepository.save(blacklistedToken);
+
+        this.cleanupOldTokens(user);
+    }
+
+    private void cleanupOldTokens(User user) {
+        this.refreshTokenRepository.findByUserAndExpiresAtBeforeAndIsRevokedFalse(user, LocalDateTime.now())
+                .forEach(token -> {
+                    token.setIsRevoked(true);
+                    this.refreshTokenRepository.save(token);
+                });
+
+        this.refreshTokenRepository.findByUserAndIsRevokedFalseOrderByCreatedAtDesc(user)
+                .stream()
+                .skip(5)
+                .forEach(token -> {
+                    token.setIsRevoked(true);
+                    this.refreshTokenRepository.save(token);
+                });
     }
 }
