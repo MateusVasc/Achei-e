@@ -39,4 +39,13 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(this.authService.refreshToken(request));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(String refreshToken) {
+        this.authService.logout(refreshToken);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
 }

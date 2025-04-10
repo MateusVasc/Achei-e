@@ -114,4 +114,12 @@ public class AuthService {
 
         return new LoginResponse(user.getId(), accessToken, newRefreshToken);
     }
+
+    public void logout(String refreshToken) {
+        RefreshToken refreshTokenRevoked = this.refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.BAD_REQUEST));
+
+        refreshTokenRevoked.setIsRevoked(true);
+        refreshTokenRevoked.setLastUsedAt(LocalDateTime.now());
+    }
 }
