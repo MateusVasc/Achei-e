@@ -35,7 +35,6 @@ public class PostService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final ItemService itemService;
-  private final UserService userService;
   private final ItemRepository itemRepository;
   private final HibernateSearchService hibernateSearchService;
 
