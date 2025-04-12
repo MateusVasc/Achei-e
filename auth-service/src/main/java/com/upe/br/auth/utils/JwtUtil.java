@@ -71,11 +71,11 @@ public class JwtUtil {
     }
 
     private Instant generateExpirationDateForAccessToken() {
-        return Instant.now().plusSeconds(180); // 3 minutos em segundos
+        return Instant.now().plusSeconds(900); // 15 min
     }
 
     private Instant generateExpirationDateForRefreshToken() {
-        return Instant.now().plusSeconds(300); // 5 minutos em segundos
+        return Instant.now().plusSeconds(604800); // 7 days
     }
 
     public LocalDateTime getExpirationDateFromToken(String token) {
