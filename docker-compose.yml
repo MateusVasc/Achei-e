@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: achei-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ${ACHEIE_DB_NAME},${AUTH_DB_NAME}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  acheie-service:
+    build:
+      context: ./acheie-service
+      dockerfile: Dockerfile
+    container_name: ${ACHEIE_SERVICE_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      ACHEIE_SERVICE_PORT: ${ACHEIE_SERVICE_PORT}
+      ACHEIE_SERVICE_NAME: ${ACHEIE_SERVICE_NAME}
+      ACHEIE_DATABASE_URL: ${ACHEIE_DATABASE_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ACHEIE_SERVICE_SECRET_KEY: ${ACHEIE_SERVICE_SECRET_KEY}
+      EUREKA_HOST: ${EUREKA_HOST}
+      EUREKA_PORT: ${EUREKA_PORT}
+    ports:
+      - "${ACHEIE_SERVICE_PORT}:${ACHEIE_SERVICE_PORT}"
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: ${AUTH_SERVICE_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      AUTH_SERVICE_PORT: ${AUTH_SERVICE_PORT}
+      AUTH_SERVICE_NAME: ${AUTH_SERVICE_NAME}
+      AUTH_DATABASE_URL: ${AUTH_DATABASE_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      AUTH_JWT_EXPIRATION: ${AUTH_JWT_EXPIRATION}
+      EUREKA_HOST: ${EUREKA_HOST}
+      EUREKA_PORT: ${EUREKA_PORT}
+    ports:
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: ${GATEWAY_NAME}
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      GATEWAY_PORT: ${GATEWAY_PORT}
+      GATEWAY_NAME: ${GATEWAY_NAME}
+      EUREKA_HOST: ${EUREKA_HOST}
+      EUREKA_PORT: ${EUREKA_PORT}
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    depends_on:
+      - auth-service
+      - acheie-service
+
+volumes:
+  postgres_data:

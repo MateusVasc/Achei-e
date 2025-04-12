@@ -72,7 +72,7 @@ https://achei-e-ef3b03158fb0.herokuapp.com
 >
 > Exemplo:
 >  ```
->  usuario/{id}
+>  user/{id}
 >  ```
 
 > @RequestParams: Indica que naquele exemplo, está sendo usada uma variável nos parametros de QUERY 
@@ -80,7 +80,7 @@ https://achei-e-ef3b03158fb0.herokuapp.com
 >
 > Exemplo:
 > ```
-> /usuario?name="Mateus"
+> /user?name="Mateus"
 > ```
 > OBS: No Postman/Insomnia para fazer uma requisição com query params você utilizará o Multipart Form e o 
 > preencherá com os
@@ -132,7 +132,7 @@ nomes das variáveis e seus valores
 ### `PUT` Editar usuário
 
 > ```
-> /achei-e/usuario
+> /achei-e/user
 > ```
 >
 > Exemplo de utilização
@@ -146,10 +146,10 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "tipo": "PERDIDO", 
+>    "type": "PERDIDO", 
 >    "item": {
->        "estado": "ENCONTRADO", 
->        "categoria": "ELETRONICO", 
+>        "state": "ENCONTRADO", 
+>        "category": "ELETRONICO", 
 >        "descricao": "apple watch rosa perdido no lab 2",
 >        "titulo": "apple watch rosa",
 >        "data": "2024-05-31",
@@ -161,7 +161,7 @@ nomes das variáveis e seus valores
 ### `GET` Buscar usuário por id
 
 > ```
-> /achei-e/usuario/{id}
+> /achei-e/user/{id}
 > ```
 >
 > Exemplo de utilização
@@ -169,7 +169,7 @@ nomes das variáveis e seus valores
 > _@PathVariable_
 >
 > ```
-> /achei-e/usuario/e3a3c332-18b3-4747-abe3-45a28a51a631
+> /achei-e/user/e3a3c332-18b3-4747-abe3-45a28a51a631
 > ```
 
 ### `POST` Criar novo post
@@ -189,10 +189,10 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "tipo": "PERDIDO",
+>    "type": "PERDIDO",
 >    "item": {
->        "estado": "PERDIDO", 
->        "categoria": "ELETRONICO", 
+>        "state": "PERDIDO", 
+>        "category": "ELETRONICO", 
 >        "descricao": "colchão solteiro do ben 10",
 >        "titulo": "colchão",
 >        "data": "2024-05-31",
@@ -244,10 +244,10 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "tipo": "PERDIDO",
+>    "type": "PERDIDO",
 >    "item": {
->        "estado": "PERDIDO", 
->        "categoria": "ELETRONICO", 
+>        "state": "PERDIDO", 
+>        "category": "ELETRONICO", 
 >        "descricao": "colchão solteiro do ben 10",
 >        "titulo": "colchão",
 >        "data": "2024-05-31",
