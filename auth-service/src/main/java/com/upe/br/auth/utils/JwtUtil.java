@@ -65,17 +65,17 @@ public class JwtUtil {
                     .build()
                     .verify(token)
                     .getSubject();
-        } catch (JWTCreationException e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
     private Instant generateExpirationDateForAccessToken() {
-        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plusSeconds(180); // 3 minutos em segundos
     }
 
     private Instant generateExpirationDateForRefreshToken() {
-        return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plusSeconds(300); // 5 minutos em segundos
     }
 
     public LocalDateTime getExpirationDateFromToken(String token) {
@@ -88,7 +88,7 @@ public class JwtUtil {
                     .verify(token)
                     .getExpiresAt()
                     .toInstant()
-                    .atOffset(ZoneOffset.of("-03:00"))
+                    .atZone(ZoneOffset.UTC)
                     .toLocalDateTime();
         } catch (Exception e) {
             throw new AuthException(

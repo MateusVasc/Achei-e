@@ -50,14 +50,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String email = this.jwtUtil.validateToken(token);
 
         if (email == null) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has been revoked");
             return;
         }
 
         Optional<User> optUser = userRepository.findByEmail(email);
 
         if (optUser.isEmpty()) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has been revoked");
             return;
         }
 
