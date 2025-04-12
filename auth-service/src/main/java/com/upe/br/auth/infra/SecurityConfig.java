@@ -37,7 +37,8 @@ public class SecurityConfig {
                         authorizeHttp -> {
                             authorizeHttp.requestMatchers("api/auth/register",
                                     "api/auth/login",
-                                    "api/auth/register").permitAll();
+                                    "api/auth/refresh",
+                                    "api/auth/logout").permitAll();
                             authorizeHttp.anyRequest().authenticated();
                         }
                 )
