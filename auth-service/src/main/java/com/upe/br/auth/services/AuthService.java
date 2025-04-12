@@ -45,7 +45,7 @@ public class AuthService {
 
     public void createUser(RegisterRequest request) {
         if (this.userRepository.findByEmail(request.email()).isPresent()) {
-            throw new AuthException(ExceptionMessages.USER_ALREADY_EXISTIS, HttpStatus.BAD_REQUEST);
+            throw new AuthException(ExceptionMessages.USER_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();
@@ -60,7 +60,8 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
 
         Role userRole = this.roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() ->
+                        new AuthException(ExceptionMessages.ROLE_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR));
 
         user.setRoles(Set.of(userRole));
 
