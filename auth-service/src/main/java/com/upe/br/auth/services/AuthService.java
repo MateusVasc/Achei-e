@@ -56,6 +56,7 @@ public class AuthService {
         user.setMajor(request.major());
         user.setSemester(request.semester());
         user.setPhone(request.phone());
+        user.setEnabled(true); // will be done by email request eventually
         user.setCreatedAt(LocalDateTime.now());
 
         Role userRole = this.roleRepository.findByName("USER")
