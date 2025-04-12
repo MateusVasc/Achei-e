@@ -71,7 +71,7 @@ public class User implements UserDetails {
     @Column(name = "account_locked_until")
     private LocalDateTime accountLockedUntil;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
