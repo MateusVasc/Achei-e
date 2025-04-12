@@ -114,9 +114,14 @@ public class AuthService {
     }
 
     public LoginResponse refreshToken(RefreshTokenRequest request) {
+        String oldAccessToken = request.accessToken();
         String email = this.jwtUtil.validateToken(request.refreshToken());
 
         if (email == null) {
+            throw new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
+        }
+
+        if (oldAccessToken == null || oldAccessToken.isEmpty()) {
             throw new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
         }
 
@@ -139,6 +144,15 @@ public class AuthService {
             throw new AuthException(ExceptionMessages.ACCOUNT_LOCKED, HttpStatus.FORBIDDEN);
         }
 
+        if (!this.blacklistedTokenRepository.existsByToken(oldAccessToken)) {
+            BlacklistedToken accessTokenToRevoke = new BlacklistedToken();
+            accessTokenToRevoke.setToken(oldAccessToken);
+            accessTokenToRevoke.setExpiresAt(jwtUtil.getExpirationDateFromToken(oldAccessToken));
+            accessTokenToRevoke.setRevokedAt(LocalDateTime.now());
+            accessTokenToRevoke.setUser(user);
+            this.blacklistedTokenRepository.save(accessTokenToRevoke);
+        }
+
         refreshToken.setIsRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
         this.refreshTokenRepository.save(refreshToken);
@@ -153,7 +167,7 @@ public class AuthService {
                     });
         }
 
-        String accessToken = this.jwtUtil.generateAccessToken(user);
+        String newAccessToken = this.jwtUtil.generateAccessToken(user);
         String newRefreshToken = this.jwtUtil.generateRefreshToken(user);
 
         RefreshToken refreshTokenToSave = new RefreshToken();
@@ -163,11 +177,11 @@ public class AuthService {
 
         this.refreshTokenRepository.save(refreshTokenToSave);
 
-        return new LoginResponse(user.getId(), accessToken, newRefreshToken);
+        return new LoginResponse(user.getId(), newAccessToken, newRefreshToken);
     }
 
-    public void logout(String refreshToken, String accessToken) {
-        String email = this.jwtUtil.validateToken(refreshToken);
+    public void logout(RefreshTokenRequest request) {
+        String email = this.jwtUtil.validateToken(request.refreshToken());
 
         if (email == null) {
             throw new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN);
@@ -176,7 +190,7 @@ public class AuthService {
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException(ExceptionMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        RefreshToken token = this.refreshTokenRepository.findByToken(refreshToken)
+        RefreshToken token = this.refreshTokenRepository.findByToken(request.refreshToken())
                 .orElseThrow(() -> new AuthException(ExceptionMessages.INVALID_TOKEN, HttpStatus.FORBIDDEN));
 
         if (!token.getUser().getId().equals(user.getId())) {
@@ -198,8 +212,8 @@ public class AuthService {
         this.refreshTokenRepository.save(token);
 
         BlacklistedToken blacklistedToken = new BlacklistedToken();
-        blacklistedToken.setToken(accessToken);
-        blacklistedToken.setExpiresAt(jwtUtil.getExpirationDateFromToken(accessToken));
+        blacklistedToken.setToken(request.accessToken());
+        blacklistedToken.setExpiresAt(jwtUtil.getExpirationDateFromToken(request.accessToken()));
         blacklistedToken.setUser(user);
         this.blacklistedTokenRepository.save(blacklistedToken);
 

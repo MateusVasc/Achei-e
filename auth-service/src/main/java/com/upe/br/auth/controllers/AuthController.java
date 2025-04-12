@@ -34,19 +34,24 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<LoginResponse> refreshToken(
+            @Valid @RequestBody RefreshTokenRequest request,
+            @RequestHeader("Authorization") String accessToken
+    ) {
+        String oldAccessToken = accessToken.replace("Bearer ", "");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.authService.refreshToken(request));
+                .body(this.authService.refreshToken(new RefreshTokenRequest(oldAccessToken, request.refreshToken())));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
-            @RequestHeader("Authorization") String accessToken,
-            @RequestParam String refreshToken
+            @Valid @RequestBody RefreshTokenRequest request,
+            @RequestHeader("Authorization") String accessToken
     ) {
-        accessToken = accessToken.replace("Bearer ", "");
-        this.authService.logout(refreshToken, accessToken);
+        String oldAccessToken = accessToken.replace("Bearer ", "");
+        this.authService.logout(new RefreshTokenRequest(oldAccessToken, request.refreshToken()));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
