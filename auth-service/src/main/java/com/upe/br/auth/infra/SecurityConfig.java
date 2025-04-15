@@ -35,10 +35,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttp -> {
-                            authorizeHttp.requestMatchers("api/auth/register",
-                                    "api/auth/login",
-                                    "api/auth/refresh",
-                                    "api/auth/logout").permitAll();
+                            authorizeHttp.requestMatchers(
+                                    "/api/auth/register",
+                                    "/api/auth/login",
+                                    "/api/auth/refresh",
+                                    "/api/auth/logout").permitAll();
+                            authorizeHttp.requestMatchers("/actuator/**").permitAll();
                             authorizeHttp.anyRequest().authenticated();
                         }
                 )
@@ -52,7 +54,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true);
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
