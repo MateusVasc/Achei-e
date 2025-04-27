@@ -1,17 +1,24 @@
 package com.upe.br.acheie.dtos;
 
-import java.time.LocalDate;
-
-import com.upe.br.acheie.domain.enums.State;
-import com.upe.br.acheie.domain.models.Item;
 import com.upe.br.acheie.domain.enums.Category;
+import com.upe.br.acheie.domain.enums.Status;
 
-public record ItemDTO(State state, Category category, String description,
-					  String title, LocalDate date, byte[] image) {
-	
-	public ItemDTO(Item item) {
-		this(item.getState(), item.getCategory(), item.getDescription(),
-				item.getTitle(), item.getDate(), item.getImage());
-	}
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
+public record ItemDTO(
+        UUID id,
+        String title,
+        String description,
+        Status status,
+        Category category,
+        byte[] image,
+        UUID createdBy,
+        LocalDateTime createdAt,
+        LocalDateTime lostAt,
+        LocalDateTime foundAt,
+        LocalDateTime returnedAt,
+        List<CommentDTO> comments
+) {
 }

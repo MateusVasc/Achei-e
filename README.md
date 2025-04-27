@@ -1,9 +1,9 @@
 <div align="center">
 
-# Achei-e
+# SIGU
 
   <p align="center">
-    Achados e Perdidos
+    Sistema Integrado de Gestão Universitária
     <br />
     <br />
     <a href="https://github.com/MateusVasc/Achei-e/issues">Reportar Bug</a>
@@ -12,49 +12,117 @@
   </p>
 </div>
 
+---
+
 ## Sobre o Projeto
 
-O Achei-e é uma plataforma online que oferece uma rede social dedicada à gestão de itens perdidos e encontrados dentro da universidade. Os usuários podem cadastrar-se, autenticar-se e interagir com a plataforma para registrar itens perdidos, visualizar itens encontrados, marcar itens como devolvidos e entrar em contato com outros usuários para facilitar a devolução dos objetos perdidos. Nesta repositório encontra-se todo o código destinado a API dessa plataforma, todo o código relacionado ao front-end da aplicação encontra-se no repositório https://github.com/JoaoLucasCordeiro/achei-e_client.
+O SIGU é um projeto com foco em **arquitetura de microsserviços**, utilizando práticas modernas de desenvolvimento distribuído e automação.
+
+Este sistema visa criar um ecossistema de serviços voltados à gestão universitária, com foco inicial em autenticação, na criação de um sistema de achados e perdidos e extensibilidade futura para outras áreas da instituição.
+
+---
+
+## 🧱 Arquitetura
+
+### Sobre Microsserviços
+
+#### O que motivou a escolha por microsserviços?
+
+O SIGU (Sistema Integrado de Gestão Universitária) é uma plataforma projetada para centralizar e resolver múltiplas necessidades da Universidade de Pernambuco. Algumas dessas necessidades já são conhecidas — como a autenticação de usuários ou um sistema de achados e perdidos — mas muitas outras ainda surgirão com o tempo.
+
+Por esse motivo, optar por uma arquitetura baseada em microsserviços oferece flexibilidade e escalabilidade. Cada funcionalidade é implementada como um serviço independente, o que permite que novos módulos sejam adicionados sem impactar diretamente os serviços existentes. Essa abordagem facilita o crescimento incremental da plataforma, promovendo des acoplamento, resiliência, e implantação independente de cada componente do sistema.
+
+#### Como os domínios estão separados?
+
+A separação de domínios no SIGU segue o princípio de responsabilidade única. Cada serviço é responsável por um conjunto específico de funcionalidades relacionadas a um domínio da universidade. Por exemplo:
+
+- **Auth Service:** Responsável por autenticação e autorização de usuários, gerenciamento de tokens, registro e login.
+- **Achei Service:** Cuida das operações relacionadas a objetos perdidos e encontrados dentro da instituição.
+- **Outros módulos (a serem adicionados):** Como o sistema foi desenhado com extensibilidade em mente, novos serviços poderão ser introduzidos facilmente, como um módulo de avisos, agendamentos, central de atendimento, etc.
+
+Os serviços se comunicam entre si através de HTTP e, quando necessário, por meio de mensageria assíncrona usando um broker como RabbitMQ, o que promove desacoplamento ainda maior.
+
+#### Quais vantagens essa arquitetura traz pro projeto?
+
+#### Desafios enfrentados:
+
+### Sobre Service Discovery
+
+### Sobre Gateways
+
+### Serviços Atuais
+
+| Serviço         | Função                                                 |
+|-----------------|--------------------------------------------------------|
+| `eureka`        | Service discovery com Spring Cloud Eureka              |
+| `gateway`       | API Gateway para roteamento centralizado               |
+| `auth-service`  | Autenticação, registro, emissão de JWT                 |
+| `acheie-service`| Gestão de achados e perdidos na instituição            |
+
+### Comunicação
+
+- ✅ Registro de serviços via Eureka
+- ✅ Roteamento via Spring Cloud Gateway
+- 🔜 REST entre microserviços
+- 🔜 Mensageria assíncrona (RabbitMQ/Kafka) para eventos
+
+---
 
 ## Tecnologias Utilizadas
 
-![Spring-Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring-Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?style=for-the-badge&logo=Spring-Boot&logoColor=white)
+![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-6DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Postgres](https://img.shields.io/badge/PostgreSQL-4169E1.svg?style=for-the-badge&logo=PostgreSQL&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=for-the-badge&logo=swagger&logoColor=black)
+
+- Java + Spring Boot
+- Spring Cloud (Eureka, Gateway)
+- Docker
+- PostgreSQL
+- Maven
+- GitHub Actions (CI/CD - em progresso)
+- Testes com JUnit + Mockito
+- OpenAPI/Swagger (futuro)
+
+---
 
 ## Configuração do ambiente de desenvolvimento
 
-<h3>Pré-requisitos: </h3>
-
-**Instalação do [JDK 19](https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html) (Java SE Development Kit)**
-
-**Instalação do [Intellij](https://www.jetbrains.com/pt-br/idea/download/?section=windows) ou [Eclipse](https://www.eclipse.org/downloads/)**
-
-**Instalação do [PostgreSQL](https://www.postgresql.org/download/)**
-
-### Clone o repositório via Git bash:
+### 1. Clone o repositório
 
 ```
 git clone https://github.com/MateusVasc/Achei-e.git
 ```
 
-### Defina as variáveis de Ambiente
+### 2. Defina as variáveis de Ambiente
 
 ```
-DATABASE_PASSWORD
-DATABASE_URL
-DATABASE_USER
-SECRET_KEY
+cp .env.example .env
 ```
 
-Esta secção é dedicada a instrução de como utilizar a API do Achei-e pelo lado do cliente.
+### 3. Suba os serviços
+
+```
+docker-compose up --build
+```
+
+---
+
+## Utilizando a API
+
+Esta secção é dedicada ao front-end da aplicação, instruindo como utilizar a API do SIGU pelo lado do cliente.
 Os endpoints serão descritos logo abaixo como também o formato de suas entradas.
-## URL da API
+
+### Base URL da API
 
 ```
-https://achei-e-ef3b03158fb0.herokuapp.com
+http://localhost:8080
 ```
-## Convenções:
+### Convenções:
 
 >@RequestBody: Indica que naquele exemplo, está sendo usado um JSON no BODY da requisição
 >
@@ -63,7 +131,7 @@ https://achei-e-ef3b03158fb0.herokuapp.com
 >  ```
 >  {
 >    "email": "mateus-teste@upe.com.br",
->    "senha": "senh@s3gur4"
+>    "senha": "Senh@s3gur4"
 >  }
 >  ```
  
@@ -82,17 +150,14 @@ https://achei-e-ef3b03158fb0.herokuapp.com
 > ```
 > /user?name="Mateus"
 > ```
-> OBS: No Postman/Insomnia para fazer uma requisição com query params você utilizará o Multipart Form e o 
-> preencherá com os
-nomes das variáveis e seus valores
 
 
-## Endpoints
+### Endpoints
 
 ### `POST` Cadastro
 
 > ```
-> /achei-e/cadastro
+> /auth-service/api/auth/register
 > ```
 >
 > Exemplo de utilização
@@ -115,7 +180,7 @@ nomes das variáveis e seus valores
 ### `POST` Login
 
 > ```
-> /achei-e/login
+> /auth-service/api/auth/login
 > ```
 >
 > Exemplo de utilização
@@ -124,199 +189,12 @@ nomes das variáveis e seus valores
 >
 > ```
 > {
->    "email": "mateusParaExcluir22222@gmail.com",
+>    "email": "mateusParaTeste22222@gmail.com",
 >    "senha": "m12345"
 > }
 > ```
 
-### `PUT` Editar usuário
-
-> ```
-> /achei-e/user
-> ```
->
-> Exemplo de utilização
->
-> _@RequestParam_
->
-> ```
-> postId: e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestBody_
->
-> ```
-> {
->    "type": "PERDIDO", 
->    "item": {
->        "state": "ENCONTRADO", 
->        "category": "ELETRONICO", 
->        "descricao": "apple watch rosa perdido no lab 2",
->        "titulo": "apple watch rosa",
->        "data": "2024-05-31",
->        "foto": ""
->    }
-> }
-> ```
-
-### `GET` Buscar usuário por id
-
-> ```
-> /achei-e/user/{id}
-> ```
->
-> Exemplo de utilização
->
-> _@PathVariable_
->
-> ```
-> /achei-e/user/e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-
-### `POST` Criar novo post
-
-> ```
-> /achei-e/novo-post/{usuarioId}
-> ```
->
-> Exemplo de utilização
->
-> _@PathVariable_
->
-> ```
-> /achei-e/novo-post/e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestBody_
->
-> ```
-> {
->    "type": "PERDIDO",
->    "item": {
->        "state": "PERDIDO", 
->        "category": "ELETRONICO", 
->        "descricao": "colchão solteiro do ben 10",
->        "titulo": "colchão",
->        "data": "2024-05-31",
->        "foto": ""
->    }
-> }
-> ```
-
-### `GET` Listar todos os posts
-
-> ```
-> /achei-e/posts
-> ```
->
-> Exemplo de utilização
->
-> ```
-> /achei-e/posts
-> ```
-
-### `GET` Buscar post por id
-
-> ```
-> /achei-e/post/{id}
-> ```
->
-> Exemplo de utilização
->
-> _@PathVariable_
->
-> ```
-> /achei-e/post/e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-
-### `PUT` Editar post
-
-> ```
-> /achei-e/post
-> ```
->
-> Exemplo de utilização
->
-> _@RequestParam_
->
-> ```
-> postId: e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestBody_
->
-> ```
-> {
->    "type": "PERDIDO",
->    "item": {
->        "state": "PERDIDO", 
->        "category": "ELETRONICO", 
->        "descricao": "colchão solteiro do ben 10",
->        "titulo": "colchão",
->        "data": "2024-05-31",
->        "foto": ""
->    }
-> }
-> ```
-
-### `DEL` Excluir post
-
-> ```
-> /achei-e/excluir-post/{idPost}
-> ```
->
-> Exemplo de utilização
->
-> _@PathVariable_
->
-> ```
-> /achei-e/excluir-post/e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestParam_
->
-> ```
-> idUsuario: j3b3c332-18b3-4747-abe3-45a28a51a631
-> ```
-
-### `POST` Fazer comentário
-
-> ```
-> /achei-e/post/{postId}
-> ```
->
-> Exemplo de utilização
->
-> _@PathVariable_
->
-> ```
-> /achei-e/post/e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestParam_
->
-> ```
-> usuarioId: e3a3c332-18b3-4747-abe3-45a28a51a631
-> ```
-> _@RequestBody_
->
-> ```
-> {
->    "assunto": "perdi meu guarda-chuva na sala tal",
-> }
-> ```
-
-### `PUT` Encerrar procura
-
-> ```
-> /achei-e/post/encerrar-procura
-> ```
->
-> Exemplo de utilização
->
-> _@RequestBody_
->
-> ```
-> {
->    "idUsuario": "k1b3c332-18b3-4747-abe3-45a28a51a631",
->    "idPost": "p2b3c332-18b3-4747-abe3-45a28a51a631"
-> }
-> ```
+---
 
 ## Autores
 

@@ -1,14 +1,12 @@
 package com.upe.br.acheie.dtos;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-import com.upe.br.acheie.domain.models.Comment;
-
-public record CommentDTO(String subject, UserDTO user, LocalDate createdAt,
-						 LocalDate deletedAt) {
-
-	public CommentDTO(Comment comment) {
-		this(comment.getSubject(), new UserDTO(comment.getUser()),
-				comment.getCreatedAt(), comment.getDeletedAt());
-	}
+public record CommentDTO(
+        UUID id,
+        String subject,
+        UUID createdBy,
+        LocalDateTime createdAt
+) {
 }

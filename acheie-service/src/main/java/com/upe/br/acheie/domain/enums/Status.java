@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Type {
+public enum Status {
 
   LOST("Lost"),
   FOUND("Found"),
@@ -13,10 +13,10 @@ public enum Type {
 
   private final String value;
   
-  public static boolean eType(String word) {
-	  Type[] types = Type.values();
-	  for (Type type : types) {
-		  if (type.value.equals(word)) {
+  public static boolean eStatus(String word) {
+	  Status[] statuses = Status.values();
+	  for (Status status : statuses) {
+		  if (status.value.equals(word)) {
 			  return true;
 		  }
 	  }

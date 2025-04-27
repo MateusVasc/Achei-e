@@ -39,7 +39,8 @@ public class SecurityConfig {
                                     "/api/auth/register",
                                     "/api/auth/login",
                                     "/api/auth/refresh",
-                                    "/api/auth/logout").permitAll();
+                                    "/api/auth/logout",
+                                    "api/auth/hello").permitAll();
                             authorizeHttp.requestMatchers("/actuator/**").permitAll();
                             authorizeHttp.anyRequest().authenticated();
                         }
